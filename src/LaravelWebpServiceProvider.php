@@ -2,9 +2,9 @@
 
 namespace Pi\LaravelWebp;
 
+use Pi\LaravelWebp\Commands\LaravelWebpCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Pi\LaravelWebp\Commands\LaravelWebpCommand;
 
 class LaravelWebpServiceProvider extends PackageServiceProvider
 {
