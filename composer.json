@@ -52,7 +52,7 @@
                 "Pi\\LaravelWebp\\LaravelWebpServiceProvider"
             ],
             "aliases": {
-                "LaravelWebp": "Pi\\LaravelWebp\\LaravelWebpFacade"
+                "ImageToWebp": "Pi\\LaravelWebp\\ImageToWebp"
             }
         }
     },
