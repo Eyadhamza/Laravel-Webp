@@ -2,6 +2,7 @@
 
 namespace Pi\LaravelWebp\Services;
 
+use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -61,7 +62,7 @@ class ImageToWebpService
     }
 
 
-    public function setPath($imagePath, $width = null, $height = null)
+    public function setPath($imagePath, $width = null, $height = null) : void
     {
         if ($this->isNotImage($imagePath)) {
             throw new \Exception('This is not an image!');
@@ -84,6 +85,8 @@ class ImageToWebpService
     {
         if (Storage::exists($this->webpRelativePath)) {
             Storage::delete($this->imageRelativePath);
+        }else{
+            throw new Exception("trying to delete the original image while the new image doesn't exist!");
         }
     }
 
@@ -146,7 +149,7 @@ class ImageToWebpService
         return !$this->isImage($imagePath);
     }
 
-    public function originalSize(): void
+    private function originalSize(): void
     {
         if (Storage::exists($this->imageRelativePath)) {
             $this->originalSize = Storage::size($this->imageRelativePath);
@@ -155,12 +158,12 @@ class ImageToWebpService
         }
     }
 
-    public function optimizedSize()
+    private function optimizedSize()
     {
         $this->optimizedSize = Storage::size($this->webpRelativePath);
     }
 
-    public function sizeDiff()
+    private function sizeDiff()
     {
         return (1 - $this->optimizedSize / $this->originalSize) * 100;
     }
