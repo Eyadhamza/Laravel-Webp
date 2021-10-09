@@ -5,12 +5,13 @@ namespace Pi\LaravelWebp\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Pi\LaravelWebp\ImageToWebp;
+use Pi\LaravelWebp\Services\ImageToWebpService;
 
 
 trait HandleWebpConversion
 {
-    protected $imageService;
-    protected $overwrite = false;
+    protected ImageToWebpService $imageService;
+    protected bool $overwrite = false;
 
 
     protected function convertImageInDatabase(): string
@@ -45,7 +46,7 @@ trait HandleWebpConversion
     {
         ImageToWebp::setPath($imagePath ?? $this->getImageField());
 
-        ImageToWebp::overwrite(70, $width, $height);
+        ImageToWebp::overwrite(70);
 
         $this->convertImageInDatabase();
 
