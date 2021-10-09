@@ -2,15 +2,12 @@
 
 namespace Pi\LaravelWebp\Services;
 
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
 class ImageToWebpService
 {
-
-    const  IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
+    public const  IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
 
     private $originalSize;
     private $optimizedSize;
@@ -27,6 +24,7 @@ class ImageToWebpService
             return $this->getWebpFullPath();
         }
         $this->saveAsWebp();
+
         return $this->getWebpFullPath();
     }
 
@@ -35,7 +33,6 @@ class ImageToWebpService
         $this->setPath($imagePath, $width, $height);
 
         return Storage::exists($this->webpRelativePath);
-
     }
 
     public function saveAsWebp($quality = 70): void
@@ -60,7 +57,6 @@ class ImageToWebpService
         $this->deleteOld();
     }
 
-
     public function setPath($imagePath, $width = null, $height = null)
     {
         if ($this->isNotImage($imagePath)) {
@@ -79,7 +75,6 @@ class ImageToWebpService
         $this->toPhysicalPath();
     }
 
-
     public function deleteOld()
     {
         if (Storage::exists($this->webpRelativePath)) {
@@ -87,18 +82,18 @@ class ImageToWebpService
         }
     }
 
-
     private function getSlicedImageAtExtension($imagePath = null): array
     {
         $imageParts = explode('.', $imagePath ?? $this->imageRelativePath);
         $sliced = array_slice($imageParts, 0, -1);
-        return [implode('.', $sliced), end($imageParts)];
 
+        return [implode('.', $sliced), end($imageParts)];
     }
 
     public function getWebpRelativePath($imagePath): string
     {
         $this->buildNewRelativeWebpPath($imagePath);
+
         return $this->webpRelativePath;
     }
 
@@ -116,7 +111,6 @@ class ImageToWebpService
 
     private function toPhysicalPath()
     {
-
         $this->webpPhysicalPath = Storage::path($this->webpRelativePath);
         $this->imagePhysicalPath = Storage::path($this->imageRelativePath);
     }
@@ -136,14 +130,16 @@ class ImageToWebpService
     private function isImage($file): bool
     {
         $filePathParts = explode('.', $file);
+
         return in_array(
             end($filePathParts),
-            self::IMAGE_EXTENSIONS);
+            self::IMAGE_EXTENSIONS
+        );
     }
 
     private function isNotImage($imagePath): bool
     {
-        return !$this->isImage($imagePath);
+        return ! $this->isImage($imagePath);
     }
 
     public function originalSize(): void
