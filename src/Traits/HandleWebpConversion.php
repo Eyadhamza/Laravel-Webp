@@ -13,7 +13,6 @@ trait HandleWebpConversion
     protected $overwrite = false;
 
 
-    // use Facades! instead of constuctors!
     protected function convertImageInDatabase(): string
     {
 
@@ -30,7 +29,7 @@ trait HandleWebpConversion
         try {
             ImageToWebp::setPath($imagePath ?? $this->getImageField());
 
-            ImageToWebp::saveAsWebp();
+            ImageToWebp::save();
 
             $this->convertImageInDatabase();
 
@@ -46,18 +45,13 @@ trait HandleWebpConversion
     {
         ImageToWebp::setPath($imagePath ?? $this->getImageField());
 
-        ImageToWebp::overwriteAsWebp(70, $width, $height);
+        ImageToWebp::overwrite(70, $width, $height);
 
         $this->convertImageInDatabase();
 
     }
 
-    public function getThumbnailImageAttribute($imagePath = null)
-    {
-        return ImageToWebp::getOrCreate($imagePath ?? $this->getImageField(),70,70);
-    }
-
-    public function resizeImage($width = 400,$height = 200, $imagePath = null)
+    public function resizeImage($width = 400,$height = 200, $imagePath = null): string
     {
         return ImageToWebp::getOrCreate($imagePath ?? $this->getImageField(),$width,$height);
     }

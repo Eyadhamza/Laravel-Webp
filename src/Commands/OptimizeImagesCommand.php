@@ -36,7 +36,7 @@ class OptimizeImagesCommand extends Command
             try {
                 $this->imageService->setPath($file);
 
-                $this->imageService->overwriteAsWebp();
+                $this->imageService->overwrite();
 
                 $this->info($this->imageService->printInfo());
 

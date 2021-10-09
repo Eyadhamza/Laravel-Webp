@@ -31,7 +31,7 @@ class ConvertAssetImagesCommand extends Command
 
                 $this->imageService->setPath($file->getRealPath());
 
-                $this->imageService->overwriteAsWebp();
+                $this->imageService->overwrite();
 
                 $this->info($this->imageService->printInfo());
 

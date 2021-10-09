@@ -27,7 +27,7 @@ class ImageToWebpService
         if ($this->exists($imagePath, $width, $height)) {
             return $this->getWebpFullPath();
         }
-        $this->saveAsWebp();
+        $this->save();
         return $this->getWebpFullPath();
     }
 
@@ -39,7 +39,7 @@ class ImageToWebpService
 
     }
 
-    public function saveAsWebp($quality = 70): void
+    public function save($quality = 70): void
     {
         $this->originalSize();
 
@@ -55,9 +55,9 @@ class ImageToWebpService
         $this->optimizedSize();
     }
 
-    public function overwriteAsWebp($quality = 70): void
+    public function overwrite($quality = 70): void
     {
-        $this->saveAsWebp($quality);
+        $this->save($quality);
         $this->deleteOld();
     }
 
