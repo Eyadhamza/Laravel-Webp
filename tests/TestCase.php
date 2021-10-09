@@ -28,9 +28,9 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_laravel-webp_table.php.stub';
+
+        $migration = include __DIR__.'/../database/migrations/٢٠٢١_١٠_٠٩_٢٣١٢٢٢_create_test_images_table.php';
         $migration->up();
-        */
+
     }
 }
