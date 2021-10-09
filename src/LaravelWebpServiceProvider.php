@@ -17,9 +17,8 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-webp')
-            ->hasConfigFile()
+            ->hasConfigFile('laravel-webp')
             ->hasViews()
-            ->hasMigration('create_laravel-webp_table')
             ->hasCommand(LaravelWebpCommand::class);
     }
 }
