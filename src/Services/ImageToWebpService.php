@@ -19,11 +19,13 @@ class ImageToWebpService
     private string $webpPhysicalPath;
     private ?int $width;
     private ?int $height;
+    private ?int $quality;
 
     public function __construct()
     {
         $this->width = config('laravel-webp.width');
         $this->height = config('laravel-webp.height');
+        $this->quality = config('laravel-webp.quality');
     }
 
     /**
@@ -62,10 +64,10 @@ class ImageToWebpService
         if ($this->width && $this->height) {
             Image::make($this->imagePhysicalPath)
                 ->resize($this->width, $this->height)
-                ->save($this->webpPhysicalPath, $quality ?? config('laravel-webp.quality'), 'webp');
+                ->save($this->webpPhysicalPath, $quality ?? $this->quality, 'webp');
         } else {
             Image::make($this->imagePhysicalPath)
-                ->save($this->webpPhysicalPath, $quality ?? config('laravel-webp.quality'), 'webp');
+                ->save($this->webpPhysicalPath, $quality ?? $this->quality, 'webp');
         }
         clearstatcache();
         $this->optimizedSize();
@@ -76,7 +78,7 @@ class ImageToWebpService
      */
     public function overwrite($quality = null): void
     {
-        $this->save($quality ?? config('laravel-webp.quality'));
+        $this->save($quality ?? $this->quality);
         $this->deleteOld();
     }
 
