@@ -72,7 +72,7 @@ The saveImageAsWebp() method will do the following:
 4- Create a log entry in the laravel.log file with the details of the operation
 and the before and after size e.g:
 ```php
-Image: public/test.jpg Before: 0.3126 after: 0.0460 Percentage: 85.270184923587
+Image: public/test.jpg Before: 0.3126 after: 0.0460 Percentage: 85.27
 ```
 
 ---
