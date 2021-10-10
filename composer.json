@@ -1,8 +1,8 @@
 {
-    "name": "pi/laravel-webp",
+    "name": "theprofessor/laravel-webp",
     "description": "This is my package laravel-webp",
     "keywords": [
-        "pi",
+        "theprofessor",
         "laravel",
         "laravel-webp"
     ],
