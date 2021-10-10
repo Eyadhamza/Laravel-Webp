@@ -14,9 +14,9 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
 {
     public function register()
     {
-         parent::register();
+        parent::register();
 
-        $this->app->bind('imageToWebp', function($app) {
+        $this->app->bind('imageToWebp', function ($app) {
             return new ImageToWebpService();
         });
     }

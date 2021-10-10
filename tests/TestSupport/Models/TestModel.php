@@ -8,12 +8,12 @@ use Pi\LaravelWebp\Traits\HandleWebpConversion;
 
 class TestModel extends Model
 {
+    use HandleWebpConversion;
+    use HasFactory;
     protected $table = 'test_images';
 
-    use HandleWebpConversion, HasFactory;
-
     protected $fillable = [
-        'image'
+        'image',
     ];
 
     protected string $imageField = 'image';

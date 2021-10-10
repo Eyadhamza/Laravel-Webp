@@ -1,17 +1,16 @@
 <?php
 
-use Illuminate\Http\UploadedFile;
-use Pi\LaravelWebp\ImageToWebp;
-
-use Pi\LaravelWebp\Tests\TestSupport\Models\TestModel;
 use function Pest\Laravel\assertDatabaseHas;
-use function Pest\Laravel\withoutExceptionHandling;
 
-beforeEach(function (){
-   TestModel::factory()->create(
-       ['image' => 'public/test.jpg',]
-   );
-   $this->prepareTestImage();
+use function Pest\Laravel\withoutExceptionHandling;
+use Pi\LaravelWebp\ImageToWebp;
+use Pi\LaravelWebp\Tests\TestSupport\Models\TestModel;
+
+beforeEach(function () {
+    TestModel::factory()->create(
+        ['image' => 'public/test.jpg',]
+    );
+    $this->prepareTestImage();
 });
 
 it('can test', function () {
@@ -28,7 +27,6 @@ it('can save an image', function () {
 
     Storage::disk()
         ->assertExists(ImageToWebp::getOldImageRelativePath());
-
 });
 
 it('can overwrite an image', function () {
@@ -42,7 +40,6 @@ it('can overwrite an image', function () {
 
     Storage::disk()
         ->assertMissing(ImageToWebp::getOldImageRelativePath());
-
 });
 
 it('must modify image url in the database', function () {
@@ -50,8 +47,8 @@ it('must modify image url in the database', function () {
 
     $testImage->saveImageAsWebp();
 
-    assertDatabaseHas('test_images',[
-       'image' => ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath())
+    assertDatabaseHas('test_images', [
+       'image' => ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()),
    ]);
 });
 
@@ -84,15 +81,15 @@ it('must modify image url in the database by passing the path', function () {
 
     $testImage->saveImageAsWebp($testImage->image);
 
-    assertDatabaseHas('test_images',[
-        'image' => ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath())
+    assertDatabaseHas('test_images', [
+        'image' => ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()),
     ]);
 });
 
 it('must resize as needed', function () {
     $testImage = TestModel::find(1);
 
-    $path = $testImage->resizeImage(400,400);
+    $path = $testImage->resizeImage(400, 400);
 
     Storage::disk()
         ->assertExists(ImageToWebp::toRelativePath($path));
@@ -101,4 +98,4 @@ it('must resize as needed', function () {
         ->assertExists($testImage->image);
 });
 
-afterEach(fn() => $this->refreshAndClean());
+afterEach(fn () => $this->refreshAndClean());
