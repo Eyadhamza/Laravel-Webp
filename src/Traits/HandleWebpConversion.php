@@ -27,18 +27,14 @@ trait HandleWebpConversion
     public function saveImageAsWebp(string $imagePath = null, $width = null, $height = null)
     {
 
-//        try {
-            ImageToWebp::setPath($imagePath ?? $this->getImageField());
+        ImageToWebp::setPath($imagePath ?? $this->getImageField());
 
-            ImageToWebp::save();
+        ImageToWebp::save();
 
-            $this->convertImageInDatabase();
+        $this->convertImageInDatabase();
 
-            Log::info(ImageToWebp::printInfo());
-//
-//        } catch (\Exception $e) {
-//            Log::info($e);
-//        }
+        Log::info(ImageToWebp::printInfo());
+
 
     }
 
@@ -52,9 +48,9 @@ trait HandleWebpConversion
 
     }
 
-    public function resizeImage($width = 400,$height = 200, $imagePath = null): string
+    public function resizeImage($width = 400, $height = 200, $imagePath = null): string
     {
-        return ImageToWebp::getOrCreate($imagePath ?? $this->getImageField(),$width,$height);
+        return ImageToWebp::getOrCreate($imagePath ?? $this->getImageField(), $width, $height);
     }
 
     protected function getImageField()
