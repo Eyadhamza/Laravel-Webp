@@ -1,11 +1,11 @@
 <?php
 
-use function Pest\Laravel\assertDatabaseHas;
+use EyadHamza\LaravelWebp\ImageToWebp;
 
+use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\withoutExceptionHandling;
-use EyadHamza\LaravelWebp\ImageToWebp;
-use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
 
 beforeEach(function () {
     TestModel::factory()->create(

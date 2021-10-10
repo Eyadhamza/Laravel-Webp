@@ -2,9 +2,9 @@
 
 namespace EyadHamza\LaravelWebp\Traits;
 
-use Illuminate\Support\Facades\Log;
 use EyadHamza\LaravelWebp\ImageToWebp;
 use EyadHamza\LaravelWebp\Services\ImageToWebpService;
+use Illuminate\Support\Facades\Log;
 
 trait HandleWebpConversion
 {
