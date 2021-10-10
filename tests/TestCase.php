@@ -12,9 +12,9 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-//        Factory::guessFactoryNamesUsing(
-//            fn (string $modelName) => 'Pi\\LaravelWebp\\Database\\Factories\\'.class_basename($modelName).'Factory'
-//        );
+        Factory::guessFactoryNamesUsing(
+            fn (string $modelName) => 'Pi\\LaravelWebp\\Database\\Factories\\'.class_basename($modelName).'Factory'
+        );
     }
 
     protected function getPackageProviders($app)
@@ -29,8 +29,7 @@ class TestCase extends Orchestra
         config()->set('database.default', 'testing');
 
 
-        $migration = include __DIR__.'/../database/migrations/٢٠٢١_١٠_٠٩_٢٣١٢٢٢_create_test_images_table.php';
-        $migration->up();
-
+        $migration = include __DIR__.'/../database/migrations/٢٠٢١_١٠_٠٩_٢٣١٢٢٢_create_test_images_table.php.stub';
+        (new \CreateTestImagesTable)->up();
     }
 }
