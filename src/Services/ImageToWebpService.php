@@ -189,7 +189,7 @@ class ImageToWebpService
             $this->imageRelativePath . ' Before: ' .
             number_format($this->originalSize / 1048576, 4) . ' after: ' .
             number_format($this->optimizedSize / 1048576, 4) . ' Percentage: ' .
-            number_format($this->sizeDiff(),2);
+            number_format($this->sizeDiff(), 2);
     }
 
     private function originalSize(): void
