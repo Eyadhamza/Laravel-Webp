@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 
-
 class ImageToWebpService
 {
-
-    const  IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
+    public const  IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
 
     private int $originalSize;
     private int $optimizedSize;
@@ -31,6 +29,7 @@ class ImageToWebpService
             return $this->getWebpFullPath();
         }
         $this->save();
+
         return $this->getWebpFullPath();
     }
 
@@ -42,7 +41,6 @@ class ImageToWebpService
         $this->setPath($imagePath, $width, $height);
 
         return Storage::exists($this->webpRelativePath);
-
     }
 
     /**
@@ -62,7 +60,6 @@ class ImageToWebpService
         } else {
             Image::make($this->imagePhysicalPath)
                 ->save($this->webpPhysicalPath, $quality ?? config('laravel-webp.quality'), 'webp');
-
         }
         clearstatcache();
         $this->optimizedSize();
@@ -77,11 +74,10 @@ class ImageToWebpService
         $this->deleteOld();
     }
 
-
     /**
      * @throws Exception
      */
-    public function setPath($imagePath, $width = null, $height = null) : void
+    public function setPath($imagePath, $width = null, $height = null): void
     {
         if ($this->isNotImage($imagePath)) {
             throw new Exception('This is not an image!');
@@ -99,7 +95,6 @@ class ImageToWebpService
         $this->toPhysicalPath();
     }
 
-
     /**
      * @throws Exception
      */
@@ -107,18 +102,17 @@ class ImageToWebpService
     {
         if (Storage::exists($this->webpRelativePath)) {
             Storage::delete($this->imageRelativePath);
-        }else{
+        } else {
             throw new Exception("trying to delete the original image while the new image doesn't exist!");
         }
     }
-
 
     private function getSlicedImageAtExtension($imagePath = null): array
     {
         $imageParts = explode('.', $imagePath ?? $this->imageRelativePath);
         $sliced = array_slice($imageParts, 0, -1);
-        return [implode('.', $sliced), end($imageParts)];
 
+        return [implode('.', $sliced), end($imageParts)];
     }
 
     public function getOldImageRelativePath(): string
@@ -129,6 +123,7 @@ class ImageToWebpService
     public function getWebpRelativePath($imagePath): string
     {
         $this->buildNewRelativeWebpPath($imagePath);
+
         return $this->webpRelativePath;
     }
 
@@ -168,16 +163,17 @@ class ImageToWebpService
     private function isImage($file): bool
     {
         $filePathParts = explode('.', $file);
+
         return in_array(
             end($filePathParts),
-            self::IMAGE_EXTENSIONS);
+            self::IMAGE_EXTENSIONS
+        );
     }
 
     private function isNotImage($imagePath): bool
     {
-        return !$this->isImage($imagePath);
+        return ! $this->isImage($imagePath);
     }
-
 
     public function printInfo(): string
     {
@@ -206,5 +202,4 @@ class ImageToWebpService
     {
         return (1 - $this->optimizedSize / $this->originalSize) * 100;
     }
-
 }

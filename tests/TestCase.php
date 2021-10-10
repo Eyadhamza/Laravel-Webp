@@ -4,7 +4,6 @@ namespace Pi\LaravelWebp\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Pi\LaravelWebp\ImageToWebp;
@@ -35,37 +34,41 @@ class TestCase extends Orchestra
 
 
         $migration = include_once __DIR__.'/TestSupport/migrations/٢٠٢١_١٠_٠٩_٢٣١٢٢٢_create_test_images_table.php.stub';
-        (new CreateTestImages)->up();
+        (new CreateTestImages())->up();
     }
+
     public function getTestDirectory(): string
     {
         return __DIR__.'/TestSupport'.'/testimages';
     }
+
     public function getTestImageRelativePath(): string
     {
         return 'public/test.jpg';
     }
+
     public function getTempImageRelativePath(): string
     {
         return 'public/test.temp.jpg';
     }
+
     public function prepareTestImage()
     {
-        if (! Storage::exists($this->getTestImageRelativePath())){
+        if (! Storage::exists($this->getTestImageRelativePath())) {
             Storage::copy($this->getTempImageRelativePath(), $this->getTestImageRelativePath());
         }
-
     }
 
     public function refreshAndClean()
     {
-        if (! Storage::exists($this->getTestImageRelativePath())){
+        if (! Storage::exists($this->getTestImageRelativePath())) {
             Storage::copy($this->getTempImageRelativePath(), $this->getTestImageRelativePath());
         }
-        if (ImageToWebp::exists($this->getTestImageRelativePath())){
+        if (ImageToWebp::exists($this->getTestImageRelativePath())) {
             Storage::delete(ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()));
         }
     }
+
     public function symLink()
     {
         App::make('files')->link(
