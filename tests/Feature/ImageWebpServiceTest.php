@@ -55,6 +55,40 @@ it('must modify image url in the database', function () {
    ]);
 });
 
+it('can  save an image by passing the path', function () {
+    $testImage = TestModel::find(1);
+
+    $testImage->saveImageAsWebp($testImage->image);
+
+    Storage::disk()
+        ->assertExists($testImage->image);
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::getOldImageRelativePath());
+});
+
+it('can overwrite an image by passing the path', function () {
+    $testImage = TestModel::find(1);
+
+    $testImage->overwriteImageAsWebp($testImage->image);
+
+    Storage::disk()
+        ->assertExists($testImage->image);
+
+    Storage::disk()
+        ->assertMissing(ImageToWebp::getOldImageRelativePath());
+});
+
+it('must modify image url in the database by passing the path', function () {
+    $testImage = TestModel::find(1);
+
+    $testImage->saveImageAsWebp($testImage->image);
+
+    assertDatabaseHas('test_images',[
+        'image' => ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath())
+    ]);
+});
+
 it('must resize as needed', function () {
     $testImage = TestModel::find(1);
 

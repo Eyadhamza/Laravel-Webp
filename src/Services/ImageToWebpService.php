@@ -19,8 +19,8 @@ class ImageToWebpService
     private string $webpRelativePath;
     private string $imagePhysicalPath;
     private string $webpPhysicalPath;
-    private int $width;
-    private int $height;
+    private ?int $width;
+    private ?int $height;
 
     /**
      * @throws Exception
