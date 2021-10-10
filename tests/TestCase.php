@@ -52,7 +52,6 @@ class TestCase extends Orchestra
         return 'public/test.temp';
     }
 
-
     public function refreshAndClean()
     {
         if (! Storage::exists($this->getTestImageRelativePath())) {

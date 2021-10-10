@@ -4,7 +4,6 @@ namespace Pi\LaravelWebp\Commands;
 
 use Illuminate\Console\Command;
 use Pi\LaravelWebp\ImageToWebp;
-use Pi\LaravelWebp\Services\ImageToWebpService;
 
 class ToWebpImageFieldCommand extends Command
 {
