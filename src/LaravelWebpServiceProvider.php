@@ -22,9 +22,10 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
 
     public function configurePackage(Package $package): void
     {
+
         $package
             ->name('laravel-webp')
-            ->hasConfigFile('laravel-webp')
+            ->hasConfigFile('webp')
             ->hasCommands([
                 ToWepExtensionFieldCommand::class,
                 ToWebpImageFieldCommand::class,

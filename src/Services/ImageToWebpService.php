@@ -23,9 +23,9 @@ class ImageToWebpService
 
     public function __construct()
     {
-        $this->width = config('laravel-webp.width');
-        $this->height = config('laravel-webp.height');
-        $this->quality = config('laravel-webp.quality');
+        $this->width = config('webp.width');
+        $this->height = config('webp.height');
+        $this->quality = config('webp.quality');
     }
 
     /**
