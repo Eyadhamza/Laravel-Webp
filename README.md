@@ -1,9 +1,9 @@
 # Laravel webp
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/pi/laravel-webp.svg?style=flat-square)](https://packagist.org/packages/pi/laravel-webp)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/pi/laravel-webp/run-tests?label=tests)](https://github.com/pi/laravel-webp/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/pi/laravel-webp/Check%20&%20fix%20styling?label=code%20style)](https://github.com/pi/laravel-webp/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/pi/laravel-webp.svg?style=flat-square)](https://packagist.org/packages/pi/laravel-webp)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/eyadhamza/laravel-webp.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/laravel-webp)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/eyadhamza/laravel-webp/run-tests?label=tests)](https://github.com/eyadhamza/laravel-webp/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/eyadhamza/laravel-webp/Check%20&%20fix%20styling?label=code%20style)](https://github.com/eyadhamza/laravel-webp/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/eyadhamza/laravel-webp.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/laravel-webp)
 
 ---
 This package is a simple wrapper for [PHP Intervention Library]() to provide a more 
