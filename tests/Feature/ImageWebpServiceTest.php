@@ -66,4 +66,5 @@ it('must resize as needed', function () {
     Storage::disk()
         ->assertExists($testImage->image);
 });
+
 afterEach(fn() => $this->refreshAndClean());

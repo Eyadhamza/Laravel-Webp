@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Pi\LaravelWebp\ImageToWebp;
 use Pi\LaravelWebp\LaravelWebpServiceProvider;
 use Pi\LaravelWebp\Tests\TestSupport\migrations\CreateTestImages;
 
@@ -44,22 +45,25 @@ class TestCase extends Orchestra
     {
         return 'public/test.jpg';
     }
-
+    public function getTempImageRelativePath(): string
+    {
+        return 'public/test.temp.jpg';
+    }
     public function prepareTestImage()
     {
-        if (! Storage::exists('public/test.jpg')){
-            Storage::copy('public/test.temp.jpg', 'public/test.jpg');
+        if (! Storage::exists($this->getTestImageRelativePath())){
+            Storage::copy($this->getTempImageRelativePath(), $this->getTestImageRelativePath());
         }
 
     }
 
     public function refreshAndClean()
     {
-        if (! Storage::exists('public/test.jpg')){
-            Storage::copy('public/test.temp.jpg', 'public/test.jpg');
+        if (! Storage::exists($this->getTestImageRelativePath())){
+            Storage::copy($this->getTempImageRelativePath(), $this->getTestImageRelativePath());
         }
-        if (Storage::exists('public/test_x.webp')){
-            Storage::delete('public/test_x.webp');
+        if (ImageToWebp::exists($this->getTestImageRelativePath())){
+            Storage::delete(ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()));
         }
     }
     public function symLink()
