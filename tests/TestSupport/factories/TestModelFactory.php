@@ -2,8 +2,8 @@
 
 namespace EyadHamza\LaravelWebp\Tests\TestSupport\factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TestModelFactory extends Factory
 {

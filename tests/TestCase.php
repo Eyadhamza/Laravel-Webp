@@ -2,13 +2,13 @@
 
 namespace EyadHamza\LaravelWebp\Tests;
 
+use EyadHamza\LaravelWebp\ImageToWebp;
+use EyadHamza\LaravelWebp\LaravelWebpServiceProvider;
+use EyadHamza\LaravelWebp\Tests\TestSupport\migrations\CreateTestImages;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase as Orchestra;
-use EyadHamza\LaravelWebp\ImageToWebp;
-use EyadHamza\LaravelWebp\LaravelWebpServiceProvider;
-use EyadHamza\LaravelWebp\Tests\TestSupport\migrations\CreateTestImages;
 
 class TestCase extends Orchestra
 {

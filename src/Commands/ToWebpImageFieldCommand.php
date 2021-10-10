@@ -2,8 +2,8 @@
 
 namespace EyadHamza\LaravelWebp\Commands;
 
-use Illuminate\Console\Command;
 use EyadHamza\LaravelWebp\ImageToWebp;
+use Illuminate\Console\Command;
 
 class ToWebpImageFieldCommand extends Command
 {

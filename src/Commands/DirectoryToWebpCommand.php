@@ -2,10 +2,10 @@
 
 namespace EyadHamza\LaravelWebp\Commands;
 
+use EyadHamza\LaravelWebp\Services\ImageToWebpService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use EyadHamza\LaravelWebp\Services\ImageToWebpService;
 
 class DirectoryToWebpCommand extends Command
 {

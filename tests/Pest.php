@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use EyadHamza\LaravelWebp\Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(
     TestCase::class,

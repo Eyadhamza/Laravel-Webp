@@ -2,9 +2,9 @@
 
 namespace EyadHamza\LaravelWebp\Tests\TestSupport\Models;
 
+use EyadHamza\LaravelWebp\Traits\HandleWebpConversion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use EyadHamza\LaravelWebp\Traits\HandleWebpConversion;
 
 class TestModel extends Model
 {
