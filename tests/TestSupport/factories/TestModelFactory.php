@@ -1,9 +1,9 @@
 <?php
 
-namespace Pi\LaravelWebp\Tests\TestSupport\factories;
+namespace EyadHamza\LaravelWebp\Tests\TestSupport\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Pi\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
 
 class TestModelFactory extends Factory
 {

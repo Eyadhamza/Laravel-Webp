@@ -1,10 +1,10 @@
 <?php
 
-namespace Pi\LaravelWebp\Tests\TestSupport\Models;
+namespace EyadHamza\LaravelWebp\Tests\TestSupport\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Pi\LaravelWebp\Traits\HandleWebpConversion;
+use EyadHamza\LaravelWebp\Traits\HandleWebpConversion;
 
 class TestModel extends Model
 {

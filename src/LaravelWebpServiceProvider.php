@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\LaravelWebp;
+namespace EyadHamza\LaravelWebp;
 
-use Pi\LaravelWebp\Commands\DirectoryToWebpCommand;
-use Pi\LaravelWebp\Commands\ToWebpImageFieldCommand;
-use Pi\LaravelWebp\Commands\ToWepExtensionFieldCommand;
-use Pi\LaravelWebp\Services\ImageToWebpService;
+use EyadHamza\LaravelWebp\Commands\DirectoryToWebpCommand;
+use EyadHamza\LaravelWebp\Commands\ToWebpImageFieldCommand;
+use EyadHamza\LaravelWebp\Commands\ToWepExtensionFieldCommand;
+use EyadHamza\LaravelWebp\Services\ImageToWebpService;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

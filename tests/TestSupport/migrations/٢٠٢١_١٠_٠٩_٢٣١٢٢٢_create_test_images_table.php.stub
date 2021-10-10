@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\LaravelWebp\Tests\TestSupport\migrations;
+namespace EyadHamza\LaravelWebp\Tests\TestSupport\migrations;
 
 
 use Illuminate\Database\Migrations\Migration;

@@ -4,8 +4,8 @@ use function Pest\Laravel\assertDatabaseHas;
 
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\withoutExceptionHandling;
-use Pi\LaravelWebp\ImageToWebp;
-use Pi\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use EyadHamza\LaravelWebp\ImageToWebp;
+use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
 
 beforeEach(function () {
     TestModel::factory()->create(
@@ -130,7 +130,7 @@ it('must convert and keep all images in the directory ', function () {
 
 it('must convert image field in the database ', function () {
     Artisan::call('images:to-webp
-    Pi\\\LaravelWebp\\\Tests\\\TestSupport\\\Models\\\TestModel
+    EyadHamza\\\LaravelWebp\\\Tests\\\TestSupport\\\Models\\\TestModel
     image');
 
     assertDatabaseHas('test_images', [

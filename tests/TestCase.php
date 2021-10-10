@@ -1,14 +1,14 @@
 <?php
 
-namespace Pi\LaravelWebp\Tests;
+namespace EyadHamza\LaravelWebp\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Pi\LaravelWebp\ImageToWebp;
-use Pi\LaravelWebp\LaravelWebpServiceProvider;
-use Pi\LaravelWebp\Tests\TestSupport\migrations\CreateTestImages;
+use EyadHamza\LaravelWebp\ImageToWebp;
+use EyadHamza\LaravelWebp\LaravelWebpServiceProvider;
+use EyadHamza\LaravelWebp\Tests\TestSupport\migrations\CreateTestImages;
 
 class TestCase extends Orchestra
 {
@@ -17,7 +17,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Pi\LaravelWebp\Tests\TestSupport\factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'EyadHamza\LaravelWebp\Tests\TestSupport\factories\\'.class_basename($modelName).'Factory'
         );
     }
 

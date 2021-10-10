@@ -1,12 +1,12 @@
 {
-    "name": "theprofessor/laravel-webp",
+    "name": "eyadhamza/laravel-webp",
     "description": "This is my package laravel-webp",
     "keywords": [
-        "theprofessor",
+        "eyadhamza",
         "laravel",
         "laravel-webp"
     ],
-    "homepage": "https://github.com/pi/laravel-webp",
+    "homepage": "https://github.com/eyadhamza/laravel-webp",
     "license": "MIT",
     "authors": [
         {
@@ -31,13 +31,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Pi\\LaravelWebp\\": "src",
-            "Pi\\LaravelWebp\\Database\\Factories\\": "database/factories"
+            "EyadHamza\\LaravelWebp\\": "src",
+            "EyadHamza\\LaravelWebp\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Pi\\LaravelWebp\\Tests\\": "tests"
+            "EyadHamza\\LaravelWebp\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -50,10 +50,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Pi\\LaravelWebp\\LaravelWebpServiceProvider"
+                "EyadHamza\\LaravelWebp\\LaravelWebpServiceProvider"
             ],
             "aliases": {
-                "ImageToWebp": "Pi\\LaravelWebp\\ImageToWebp"
+                "ImageToWebp": "EyadHamza\\LaravelWebp\\ImageToWebp"
             }
         }
     },

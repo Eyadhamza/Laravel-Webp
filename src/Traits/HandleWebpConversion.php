@@ -1,10 +1,10 @@
 <?php
 
-namespace Pi\LaravelWebp\Traits;
+namespace EyadHamza\LaravelWebp\Traits;
 
 use Illuminate\Support\Facades\Log;
-use Pi\LaravelWebp\ImageToWebp;
-use Pi\LaravelWebp\Services\ImageToWebpService;
+use EyadHamza\LaravelWebp\ImageToWebp;
+use EyadHamza\LaravelWebp\Services\ImageToWebpService;
 
 trait HandleWebpConversion
 {

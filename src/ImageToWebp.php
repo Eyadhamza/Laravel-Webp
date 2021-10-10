@@ -1,11 +1,11 @@
 <?php
 
-namespace Pi\LaravelWebp;
+namespace EyadHamza\LaravelWebp;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Pi\LaravelWebp\Services\ImageToWebpService
+ * @see \EyadHamza\LaravelWebp\Services\ImageToWebpService
  * @method static string getOrCreate($imagePath, $width = null, $height = null)
  * @method static bool exists($imagePath, $width = null, $height = null)
  * @method static void save($quality = 70)

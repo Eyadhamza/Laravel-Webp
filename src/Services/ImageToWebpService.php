@@ -1,6 +1,6 @@
 <?php
 
-namespace Pi\LaravelWebp\Services;
+namespace EyadHamza\LaravelWebp\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Storage;
