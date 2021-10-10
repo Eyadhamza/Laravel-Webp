@@ -152,7 +152,7 @@ If you want to use more methods that conveniently change your image path you may
 
 You can also call the methods directly using the Facade ImageToWebp
 ## Testing
-
+``` Warning: Tests Are Potentially Destructive```
 ```bash
 composer test
 ```
