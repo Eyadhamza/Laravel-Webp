@@ -149,7 +149,6 @@ class ImageToWebpService
 
     private function toPhysicalPath()
     {
-
         $this->webpPhysicalPath = Storage::path($this->webpRelativePath);
         $this->imagePhysicalPath = Storage::path($this->imageRelativePath);
     }

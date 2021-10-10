@@ -42,7 +42,7 @@ trait HandleWebpConversion
     {
         ImageToWebp::setPath($imagePath ?? $this->getImageField());
 
-        ImageToWebp::overwrite(70);
+        ImageToWebp::overwrite();
 
         $this->convertImageInDatabase();
 
