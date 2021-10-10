@@ -2,7 +2,6 @@
 
 namespace Pi\LaravelWebp;
 
-
 use Pi\LaravelWebp\Commands\AttachmentsOptimizeCommand;
 use Pi\LaravelWebp\Commands\ConvertAssetImagesCommand;
 use Pi\LaravelWebp\Commands\ConvertImagesToWebpCommand;
@@ -24,7 +23,6 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
 
     public function configurePackage(Package $package): void
     {
-
         $package
             ->name('laravel-webp')
             ->hasConfigFile('laravel-webp')
@@ -32,7 +30,7 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
                 AttachmentsOptimizeCommand::class,
                 ConvertAssetImagesCommand::class,
                 ConvertImagesToWebpCommand::class,
-                OptimizeImagesCommand::class
+                OptimizeImagesCommand::class,
             ]);
     }
 }

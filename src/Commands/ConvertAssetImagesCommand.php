@@ -24,24 +24,18 @@ class ConvertAssetImagesCommand extends Command
 
     public function handle()
     {
-
         foreach (File::allFiles('public') as $file) {
             try {
-
-
                 $this->imageService->setPath($file->getRealPath());
 
                 $this->imageService->overwrite();
 
                 $this->info($this->imageService->printInfo());
-
-
-
             } catch (\Exception $e) {
                 $this->info($e->getMessage());
+
                 continue;
             }
-
         }
     }
 }

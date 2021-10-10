@@ -2,9 +2,7 @@
 
 namespace Pi\LaravelWebp\Commands;
 
-
 use Illuminate\Console\Command;
-
 
 class AttachmentsOptimizeCommand extends Command
 {
@@ -17,10 +15,10 @@ class AttachmentsOptimizeCommand extends Command
     {
         $model = $this->argument('model');
         $model = app("App\Models\\".$model);
-        $model::all()->each(function ($object){
+        $model::all()->each(function ($object) {
             $object->fill([
                 'mime' => 'image\webp',
-                'extension' => 'webp'
+                'extension' => 'webp',
             ]);
             $object->save();
         });

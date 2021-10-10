@@ -17,13 +17,11 @@ class ConvertImagesToWebpCommand extends Command
         $attribute = $this->argument('attribute');
         $model = app("App\Models\\".$model);
 
-        $model->all()->each(function ($object) use($attribute){
+        $model->all()->each(function ($object) use ($attribute) {
             $object->fill([
-                $attribute => (new ImageToWebpService)->getWebpExtension($object[data_get($object,'imageField')])
+                $attribute => (new ImageToWebpService())->getWebpExtension($object[data_get($object, 'imageField')]),
             ]);
             $object->save();
         });
-
-
     }
 }
