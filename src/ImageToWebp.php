@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void deleteOld()
  * @method static string getWebpRelativePath($imagePath )
  * @method static string getOldImageRelativePath()
- * @method static string getWebpFullPath()
+ * @method static string getWebpFullPath($imageRelativePath)
  * @method static string toRelativePath($imagePath)
  * @method static string printInfo()
  */

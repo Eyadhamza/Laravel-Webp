@@ -132,9 +132,9 @@ class ImageToWebpService
         return $this->webpRelativePath;
     }
 
-    public function getWebpFullPath(): ?string
+    public function getWebpFullPath($relativeImagePath = null): ?string
     {
-        $this->buildNewRelativeWebpPath($this->imageRelativePath);
+        $this->buildNewRelativeWebpPath($relativeImagePath ?? $this->imageRelativePath);
 
         return $this->toFullPath($this->webpRelativePath);
     }
@@ -160,7 +160,7 @@ class ImageToWebpService
         return 'public/' . $url;
     }
 
-    private function toFullPath(string $relativePath): ?string
+    public function toFullPath(string $relativePath): ?string
     {
         return asset('storage/' . explode('public/', $relativePath)[1] ?? null);
     }

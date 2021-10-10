@@ -2,10 +2,10 @@
 
 namespace Pi\LaravelWebp;
 
-use Pi\LaravelWebp\Commands\AttachmentsOptimizeCommand;
-use Pi\LaravelWebp\Commands\ConvertAssetImagesCommand;
-use Pi\LaravelWebp\Commands\ConvertImagesToWebpCommand;
-use Pi\LaravelWebp\Commands\OptimizeImagesCommand;
+use Pi\LaravelWebp\Commands\ToWepExtensionFieldCommand;
+use Pi\LaravelWebp\Commands\AssetsToWebpCommand;
+use Pi\LaravelWebp\Commands\ToWebpImageFieldCommand;
+use Pi\LaravelWebp\Commands\PublicDirectoryToWebpCommand;
 use Pi\LaravelWebp\Services\ImageToWebpService;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -27,10 +27,10 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
             ->name('laravel-webp')
             ->hasConfigFile('laravel-webp')
             ->hasCommands([
-                AttachmentsOptimizeCommand::class,
-                ConvertAssetImagesCommand::class,
-                ConvertImagesToWebpCommand::class,
-                OptimizeImagesCommand::class,
+                ToWepExtensionFieldCommand::class,
+                AssetsToWebpCommand::class,
+                ToWebpImageFieldCommand::class,
+                PublicDirectoryToWebpCommand::class,
             ]);
     }
 }

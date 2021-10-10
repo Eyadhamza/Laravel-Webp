@@ -3,17 +3,15 @@
 namespace Pi\LaravelWebp\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Pi\LaravelWebp\Services\ImageToWebpService;
 
-class ConvertAssetImagesCommand extends Command
+class PublicDirectoryToWebpCommand extends Command
 {
-    protected $signature = 'asset:to-webp';
+    protected $signature = 'public:to-webp';
 
-    protected $description = 'convert images to webp';
-    /**
-     * @var ImageToWebpService
-     */
+    protected $description = 'Optimize images in public directory';
+
     private $imageService;
 
     public function __construct()
@@ -24,9 +22,9 @@ class ConvertAssetImagesCommand extends Command
 
     public function handle()
     {
-        foreach (File::allFiles('public') as $file) {
+        foreach (Storage::allFiles('public') as $file) {
             try {
-                $this->imageService->setPath($file->getRealPath());
+                $this->imageService->setPath($file);
 
                 $this->imageService->overwrite();
 

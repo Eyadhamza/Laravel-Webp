@@ -3,13 +3,14 @@
 namespace Pi\LaravelWebp\Commands;
 
 use Illuminate\Console\Command;
+use Pi\LaravelWebp\ImageToWebp;
 use Pi\LaravelWebp\Services\ImageToWebpService;
 
-class ConvertImagesToWebpCommand extends Command
+class ToWebpImageFieldCommand extends Command
 {
-    protected $signature = 'images:convert-webp {model} {attribute}';
+    protected $signature = 'change:image-webp {model} {attribute}';
 
-    protected $description = 'convert all images in the database to webp';
+    protected $description = 'convert all images in the database to webp images';
 
     public function handle()
     {
@@ -19,7 +20,7 @@ class ConvertImagesToWebpCommand extends Command
 
         $model->all()->each(function ($object) use ($attribute) {
             $object->fill([
-                $attribute => (new ImageToWebpService())->getWebpExtension($object[data_get($object, 'imageField')]),
+                $attribute => ImageToWebp::getWebpFullPath($object[data_get($object, 'imageField')]) ,
             ]);
             $object->save();
         });

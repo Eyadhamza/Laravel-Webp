@@ -4,9 +4,9 @@ namespace Pi\LaravelWebp\Commands;
 
 use Illuminate\Console\Command;
 
-class AttachmentsOptimizeCommand extends Command
+class ToWepExtensionFieldCommand extends Command
 {
-    protected $signature = 'change:to-webp {model}';
+    protected $signature = 'change:extension-webp {model}';
 
     protected $description = 'check for a column named
     |mime and extension| and apply webp changes';
