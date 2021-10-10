@@ -8,7 +8,7 @@ use Pi\LaravelWebp\Services\ImageToWebpService;
 
 class ToWebpImageFieldCommand extends Command
 {
-    protected $signature = 'change:image-webp {model} {attribute}';
+    protected $signature = 'images:to-webp {model} {attribute}';
 
     protected $description = 'convert all images in the database to webp images';
 
@@ -16,7 +16,8 @@ class ToWebpImageFieldCommand extends Command
     {
         $model = $this->argument('model');
         $attribute = $this->argument('attribute');
-        $model = app("App\Models\\".$model);
+
+        $model = class_exists($model) ? app($model) : app("App\Models\\".$model);
 
         $model->all()->each(function ($object) use ($attribute) {
             $object->fill([

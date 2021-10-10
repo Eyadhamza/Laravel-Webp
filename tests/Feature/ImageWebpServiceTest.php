@@ -2,9 +2,11 @@
 
 use function Pest\Laravel\assertDatabaseHas;
 
+use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\withoutExceptionHandling;
 use Pi\LaravelWebp\ImageToWebp;
 use Pi\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use function PHPUnit\Framework\assertTrue;
 
 beforeEach(function () {
     TestModel::factory()->create(
@@ -112,7 +114,7 @@ it('must convert and overwrite all images in the directory ', function () {
     Storage::disk()
         ->assertMissing($this->getTestImageRelativePath());
 });
-it('must convert all images in the directory ', function () {
+it('must convert and keep all images in the directory ', function () {
     Artisan::call('public:to-webp');
 
     Storage::disk()
@@ -127,5 +129,21 @@ it('must convert all images in the directory ', function () {
         ->assertExists($this->getTestImageRelativePath());
 
 });
+
+it('must convert image field in the database ', function () {
+    Artisan::call('images:to-webp
+    Pi\\\LaravelWebp\\\Tests\\\TestSupport\\\Models\\\TestModel
+    image');
+
+    assertDatabaseHas('test_images', [
+        'image' => ImageToWebp::getWebpFullPath($this->getTestImageRelativePath()),
+    ]);
+
+    assertDatabaseMissing('test_images', [
+        'image' => ImageToWebp::toFullPath($this->getTestImageRelativePath()),
+    ]);
+
+});
+
 
 afterEach(fn () => $this->refreshAndClean());

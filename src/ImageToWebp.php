@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getOldImageRelativePath()
  * @method static string getWebpFullPath($imageRelativePath)
  * @method static string toRelativePath($imagePath)
+ * @method static string toFullPath($relativeImagePath)
  * @method static string printInfo()
  */
 

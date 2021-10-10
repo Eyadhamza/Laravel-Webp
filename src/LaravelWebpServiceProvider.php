@@ -28,7 +28,6 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
             ->hasConfigFile('laravel-webp')
             ->hasCommands([
                 ToWepExtensionFieldCommand::class,
-                AssetsToWebpCommand::class,
                 ToWebpImageFieldCommand::class,
                 DirectoryToWebpCommand::class,
             ]);
