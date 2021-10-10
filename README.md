@@ -15,7 +15,7 @@ simple interface and convenient way to convert images to webp - next generation 
 You can install the package via composer:
 
 ```bash
-composer require pi/laravel-webp
+composer require eyadhamza/laravel-webp
 ```
 
 You can publish the config file with:
