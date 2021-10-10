@@ -38,6 +38,8 @@ trait HandleWebpConversion
         ImageToWebp::overwrite();
 
         $this->convertImageInDatabase();
+
+        Log::info(ImageToWebp::printInfo());
     }
 
     public function resizeImage($width = 400, $height = 200, $imagePath = null): string

@@ -20,6 +20,12 @@ class ImageToWebpService
     private ?int $width;
     private ?int $height;
 
+    public function __construct()
+    {
+        $this->width = config('laravel-webp.width');
+        $this->height = config('laravel-webp.height');
+    }
+
     /**
      * @throws Exception
      */
@@ -83,8 +89,8 @@ class ImageToWebpService
             throw new Exception('This is not an image!');
         }
 
-        $this->width = $width ?? null;
-        $this->height = $height ?? null;
+        $this->width = $width ?? $this->width;
+        $this->height = $height ?? $this->height;
 
         $relativeImagePath = null;
         if (Str::contains($imagePath, 'http')) {

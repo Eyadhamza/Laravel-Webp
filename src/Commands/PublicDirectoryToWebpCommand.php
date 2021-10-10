@@ -8,7 +8,7 @@ use Pi\LaravelWebp\Services\ImageToWebpService;
 
 class PublicDirectoryToWebpCommand extends Command
 {
-    protected $signature = 'public:to-webp';
+    protected $signature = 'public:to-webp {--overwrite : Whether the images should be deleted after conversion}';
 
     protected $description = 'Optimize images in public directory';
 
@@ -22,11 +22,14 @@ class PublicDirectoryToWebpCommand extends Command
 
     public function handle()
     {
+        $overwrite = $this->option('overwrite');
         foreach (Storage::allFiles('public') as $file) {
             try {
                 $this->imageService->setPath($file);
 
-                $this->imageService->overwrite();
+                $overwrite ?
+                    $this->imageService->overwrite() :
+                    $this->imageService->save();
 
                 $this->info($this->imageService->printInfo());
             } catch (\Exception $e) {

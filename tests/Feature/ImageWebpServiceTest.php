@@ -10,10 +10,10 @@ beforeEach(function () {
     TestModel::factory()->create(
         ['image' => 'public/test.jpg',]
     );
-    $this->prepareTestImage();
+    $this->refreshAndClean();
 });
 
-it('can test', function () {
+it('prepare test', function () {
     expect(true)->toBeTrue();
 });
 
@@ -96,6 +96,36 @@ it('must resize as needed', function () {
 
     Storage::disk()
         ->assertExists($testImage->image);
+});
+
+it('must convert and overwrite all images in the directory ', function () {
+    Artisan::call('public:to-webp --overwrite');
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()));
+
+    // ensure that other files with other extensions are not deleted!
+    Storage::disk()
+        ->assertExists($this->getTempImageRelativePath());
+
+    // ensure that old files are deleted!
+    Storage::disk()
+        ->assertMissing($this->getTestImageRelativePath());
+});
+it('must convert all images in the directory ', function () {
+    Artisan::call('public:to-webp');
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()));
+
+    // ensure that other files with other extensions are not deleted!
+    Storage::disk()
+        ->assertExists($this->getTempImageRelativePath());
+
+    // ensure that old files are there!
+    Storage::disk()
+        ->assertExists($this->getTestImageRelativePath());
+
 });
 
 afterEach(fn () => $this->refreshAndClean());

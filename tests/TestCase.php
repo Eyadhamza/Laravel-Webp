@@ -49,15 +49,9 @@ class TestCase extends Orchestra
 
     public function getTempImageRelativePath(): string
     {
-        return 'public/test.temp.jpg';
+        return 'public/test.temp';
     }
 
-    public function prepareTestImage()
-    {
-        if (! Storage::exists($this->getTestImageRelativePath())) {
-            Storage::copy($this->getTempImageRelativePath(), $this->getTestImageRelativePath());
-        }
-    }
 
     public function refreshAndClean()
     {
