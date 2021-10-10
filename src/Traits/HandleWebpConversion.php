@@ -27,7 +27,7 @@ trait HandleWebpConversion
     public function saveImageAsWebp(string $imagePath = null, $width = null, $height = null)
     {
 
-        try {
+//        try {
             ImageToWebp::setPath($imagePath ?? $this->getImageField());
 
             ImageToWebp::save();
@@ -35,10 +35,10 @@ trait HandleWebpConversion
             $this->convertImageInDatabase();
 
             Log::info(ImageToWebp::printInfo());
-
-        } catch (\Exception $e) {
-            Log::info($e);
-        }
+//
+//        } catch (\Exception $e) {
+//            Log::info($e);
+//        }
 
     }
 

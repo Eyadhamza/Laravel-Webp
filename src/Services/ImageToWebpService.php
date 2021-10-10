@@ -6,7 +6,8 @@ use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManagerStatic as Image;
+
 
 class ImageToWebpService
 {
@@ -41,6 +42,9 @@ class ImageToWebpService
 
     public function save($quality = 70): void
     {
+        if ($this->exists($this->imageRelativePath, $this->width, $this->height)) {
+            throw new Exception("Already exists!");
+        }
         $this->originalSize();
 
         if ($this->width && $this->height) {
@@ -50,6 +54,7 @@ class ImageToWebpService
         } else {
             Image::make($this->imagePhysicalPath)
                 ->save($this->webpPhysicalPath, $quality, 'webp');
+
         }
         clearstatcache();
         $this->optimizedSize();
@@ -124,7 +129,7 @@ class ImageToWebpService
         $this->imagePhysicalPath = Storage::path($this->imageRelativePath);
     }
 
-    private function toRelativePath(string $fullPath): ?string
+    public function toRelativePath(string $fullPath): ?string
     {
         $url = explode('storage/', $fullPath)[1] ?? null;
 
@@ -175,5 +180,9 @@ class ImageToWebpService
             number_format($this->originalSize / 1048576, 4) . ' after: ' .
             number_format($this->optimizedSize / 1048576, 4) . ' Percentage: ' .
             $this->sizeDiff();
+    }
+    public function getOldImageRelativePath()
+    {
+        return $this->imageRelativePath;
     }
 }

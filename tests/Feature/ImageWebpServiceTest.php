@@ -1,13 +1,17 @@
 <?php
 
 use Illuminate\Http\UploadedFile;
-use Pi\LaravelWebp\Models\TestImage;
+use Pi\LaravelWebp\ImageToWebp;
+
+use Pi\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function (){
-   Storage::fake('images');
-   TestImage::factory()->create(
-       ['image' => UploadedFile::fake()->image('avatar.png'),]
+   TestModel::factory()->create(
+       ['image' => 'public/test.jpg',]
    );
+   $this->prepareTestImage();
 });
 
 it('can test', function () {
@@ -15,5 +19,51 @@ it('can test', function () {
 });
 
 it('can save an image', function () {
+    $testImage = TestModel::find(1);
+
+    $testImage->saveImageAsWebp();
+
+    Storage::disk()
+        ->assertExists($testImage->image);
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::getOldImageRelativePath());
 
 });
+
+it('can overwrite an image', function () {
+    withoutExceptionHandling();
+    $testImage = TestModel::find(1);
+
+    $testImage->overwriteImageAsWebp();
+
+    Storage::disk()
+        ->assertExists($testImage->image);
+
+    Storage::disk()
+        ->assertMissing(ImageToWebp::getOldImageRelativePath());
+
+});
+
+it('must modify image url in the database', function () {
+    $testImage = TestModel::find(1);
+
+    $testImage->saveImageAsWebp();
+
+    assertDatabaseHas('test_images',[
+       'image' => ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath())
+   ]);
+});
+
+it('must resize as needed', function () {
+    $testImage = TestModel::find(1);
+
+    $path = $testImage->resizeImage(400,400);
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::toRelativePath($path));
+
+    Storage::disk()
+        ->assertExists($testImage->image);
+});
+afterEach(fn() => $this->refreshAndClean());
