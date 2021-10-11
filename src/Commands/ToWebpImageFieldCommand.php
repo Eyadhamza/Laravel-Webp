@@ -3,6 +3,7 @@
 namespace EyadHamza\LaravelWebp\Commands;
 
 use EyadHamza\LaravelWebp\ImageToWebp;
+use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
 use Illuminate\Console\Command;
 
 class ToWebpImageFieldCommand extends Command
@@ -14,15 +15,20 @@ class ToWebpImageFieldCommand extends Command
     public function handle()
     {
         $model = $this->argument('model');
-        $attribute = $this->argument('attribute') ?? 'imageField';
-
-        $model = class_exists($model) ? app($model) : app("App\Models\\".$model);
+        $attribute = $this->argument('attribute');
+        $model = class_exists($model) ? app($model) : app("App\Models\\" . $model);
 
         $model->all()->each(function ($object) use ($attribute) {
-            $object->fill([
-                $attribute => ImageToWebp::getWebpFullPath($object[data_get($object, $attribute)]) ,
-            ]);
-            $object->save();
+            if ($attribute) {
+                $object->fill([$attribute => ImageToWebp::getWebpRelativePath($object->$attribute)]);
+                $object->save();
+
+            } else {
+                foreach (collect($object->getImagesField()) as $key => $fieldValue) {
+                    $object->convertImageInDatabase($key);
+                }
+            }
+
         });
     }
 }

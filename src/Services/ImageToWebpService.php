@@ -89,12 +89,9 @@ class ImageToWebpService
      */
     public function setPath($imagePath, $width = null, $height = null): void
     {
-
-
         if ($this->isNotImage($imagePath)) {
             throw new Exception('This is not an image!');
         }
-
         $this->width = $width ?? $this->width;
         $this->height = $height ?? $this->height;
 
@@ -102,7 +99,9 @@ class ImageToWebpService
         if (Str::contains($imagePath, 'http')) {
             $relativeImagePath = $this->toRelativePath($imagePath);
         }
+
         $this->imageRelativePath = $relativeImagePath ?? $imagePath;
+
         $this->buildNewRelativeWebpPath();
         $this->toPhysicalPath();
     }
@@ -119,13 +118,7 @@ class ImageToWebpService
         }
     }
 
-    private function getSlicedImageAtExtension($imagePath = null): array
-    {
-        $imageParts = explode('.', $imagePath ?? $this->imageRelativePath);
-        $sliced = array_slice($imageParts, 0, -1);
 
-        return [implode('.', $sliced), end($imageParts)];
-    }
 
     public function getOldImageRelativePath(): string
     {
@@ -154,7 +147,14 @@ class ImageToWebpService
                 . "_{$this->width}x{$this->height}"
                 . '.webp';
     }
+    private function getSlicedImageAtExtension($imagePath = null): array
+    {
 
+        $imageParts = explode('.', $imagePath ?? $this->imageRelativePath);
+        $sliced = array_slice($imageParts, 0, -1);
+
+        return [implode('.', $sliced), end($imageParts)];
+    }
     private function toPhysicalPath()
     {
         $this->webpPhysicalPath = Storage::path($this->webpRelativePath);
@@ -163,8 +163,8 @@ class ImageToWebpService
 
     public function toRelativePath(string $fullPath): ?string
     {
-        $url = explode('storage/', $fullPath)[1] ?? null;
 
+        $url = explode('storage/', $fullPath)[1] ?? null;
         return 'public/' . $url;
     }
 

@@ -11,10 +11,11 @@ trait HandleWebpConversion
     protected ImageToWebpService $imageService;
     protected bool $overwrite = false;
 
-    protected function convertImageInDatabase($key)
+
+    public function convertImageInDatabase($key)
     {
-        $webpRelativePath = ImageToWebp::getWebpRelativePath($this->$key);
-        $this->setImagesField($key, $webpRelativePath);
+        ImageToWebp::setPath($this->$key);
+        $this->setImagesField($key, ImageToWebp::getWebpFullPath());
         $this->save();
     }
 
@@ -56,7 +57,7 @@ trait HandleWebpConversion
         return ImageToWebp::getOrCreate($this->$imageAttribute, $width, $height);
     }
 
-    protected function getImagesField()
+    public function getImagesField()
     {
         $imagesValues = [];
         foreach ($this->imageFields as $imageField) {
