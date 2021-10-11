@@ -46,14 +46,21 @@ class TestModel extends Model
     use HandleWebpConversion;
 }
 ```
-The Package will look for a protected property named $imageField that 
-will be used by default to change the attribute value in the database when saving the model.
+The Package will look for a protected property named $imageFields that 
+will be used by default to change the attributes value in the database when saving the model.
 ```php
 class TestModel extends Model
 {
     use HandleWebpConversion;
-    
-    protected string $imageField = 'image';
+    protected $fillable = [
+        'image',
+        'avatar'
+    ];
+
+    protected array $imageFields = [
+        'image',
+        'avatar'
+    ];
 }
 ```
 
@@ -67,7 +74,7 @@ The saveImageAsWebp() method will do the following:
 
 2- keep the old image
 
-3- change the imageField value in the database to point to the new image path with the new extension
+3- change the attributes defined in $imageFields in the database to point to the new image path with the new extension
 
 4- Create a log entry in the laravel.log file with the details of the operation
 and the before and after size e.g:
@@ -97,15 +104,19 @@ So, a better approach is to do that task one time and save another resized image
 
 And It's Simple Enough!
 
-Let's say that you want to resize the image to 400x400
+Let's say that you want to resize the image to 400x400,
+the image here is stored in a column named "image" in the database,
+you can pass any column that contains a valid absolute url of an image. 
 
 ```php
-$testModel->resizeImage(400, 400);
+$testModel->resize('image', 400, 400);
 ```
 
-The resizeImage($width, $height) method will do the following:
+The resize('image', $width, $height) method will do the following:
 
-1- Save a version of the image on disk to webp with the new dimension with a new name that ends with _400x400.webp
+1- will look for the value at "image" with the given model object
+
+2- Save a version of the image on disk to webp with the new dimension with a new name that ends with _400x400.webp
 
 2- Return the Full Path of the image, so you can use it somewhere in your views.
 
@@ -117,7 +128,8 @@ It will be kinda hard to do that manually and convert each one by hand!
 
 The Solution is Here as an Artisan Command:
 
-First we will modify files on disk then we will run another command to modify the database attribute to point to the new location
+First we will modify files on disk then we will run another command to modify the database attributes - defined in $imageFields - 
+to point to the new location.
 ```bash
 php artisan public:to-webp
 ```
