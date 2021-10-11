@@ -14,7 +14,11 @@ class TestModel extends Model
 
     protected $fillable = [
         'image',
+        'avatar'
     ];
 
-    protected string $imageField = 'image';
+    protected array $imageFields = [
+        'image',
+        'avatar'
+    ];
 }

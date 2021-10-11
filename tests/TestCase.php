@@ -47,6 +47,10 @@ class TestCase extends Orchestra
         return 'public/test.jpg';
     }
 
+    public function getSecondTestImageRelativePath(): string
+    {
+        return 'public/test2.jpg';
+    }
     public function getTempImageRelativePath(): string
     {
         return 'public/test.temp';
@@ -57,8 +61,14 @@ class TestCase extends Orchestra
         if (! Storage::exists($this->getTestImageRelativePath())) {
             Storage::copy($this->getTempImageRelativePath(), $this->getTestImageRelativePath());
         }
+        if (! Storage::exists($this->getSecondTestImageRelativePath())) {
+            Storage::copy($this->getTempImageRelativePath(), $this->getSecondTestImageRelativePath());
+        }
         if (ImageToWebp::exists($this->getTestImageRelativePath())) {
             Storage::delete(ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()));
+        }
+        if (ImageToWebp::exists($this->getSecondTestImageRelativePath())) {
+            Storage::delete(ImageToWebp::getWebpRelativePath($this->getSecondTestImageRelativePath()));
         }
     }
 

@@ -8,9 +8,11 @@ use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
-    TestModel::factory()->create(
-        ['image' => 'public/test.jpg',]
-    );
+    TestModel::factory()->create([
+        'image' => $this->getTestImageRelativePath(),
+        'avatar' => $this->getSecondTestImageRelativePath()
+        ]);
+
     $this->refreshAndClean();
 });
 
@@ -56,10 +58,8 @@ it('must modify image url in the database', function () {
 it('can  save an image by passing the path', function () {
     $testImage = TestModel::find(1);
 
-    $testImage->saveImageAsWebp($testImage->image);
-
-    Storage::disk()
-        ->assertExists($testImage->image);
+    ImageToWebp::setPath($testImage->image);
+    ImageToWebp::save();
 
     Storage::disk()
         ->assertExists(ImageToWebp::getOldImageRelativePath());
@@ -68,10 +68,11 @@ it('can  save an image by passing the path', function () {
 it('can overwrite an image by passing the path', function () {
     $testImage = TestModel::find(1);
 
-    $testImage->overwriteImageAsWebp($testImage->image);
+    ImageToWebp::setPath($testImage->image);
+    ImageToWebp::overwrite();
 
     Storage::disk()
-        ->assertExists($testImage->image);
+        ->assertExists(ImageToWebp::getWebpRelativePath($testImage->image));
 
     Storage::disk()
         ->assertMissing(ImageToWebp::getOldImageRelativePath());
@@ -90,13 +91,14 @@ it('must modify image url in the database by passing the path', function () {
 it('must resize as needed', function () {
     $testImage = TestModel::find(1);
 
-    $path = $testImage->resizeImage(400, 400);
+    $path = $testImage->resize('image',400, 400);
 
     Storage::disk()
         ->assertExists(ImageToWebp::toRelativePath($path));
 
     Storage::disk()
         ->assertExists($testImage->image);
+
 });
 
 it('must convert and overwrite all images in the directory ', function () {
@@ -139,6 +141,16 @@ it('must convert image field in the database ', function () {
 
     assertDatabaseMissing('test_images', [
         'image' => ImageToWebp::toFullPath($this->getTestImageRelativePath()),
+    ]);
+});
+it('can support multiple image fields url in the database', function () {
+    $testImage = TestModel::find(1);
+
+    $testImage->saveImageAsWebp();
+
+    assertDatabaseHas('test_images', [
+        'image' => ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()),
+        'avatar' => ImageToWebp::getWebpRelativePath($this->getSecondTestImageRelativePath())
     ]);
 });
 

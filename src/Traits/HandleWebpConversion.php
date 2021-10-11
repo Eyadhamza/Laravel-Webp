@@ -11,49 +11,63 @@ trait HandleWebpConversion
     protected ImageToWebpService $imageService;
     protected bool $overwrite = false;
 
-    protected function convertImageInDatabase(): string
+    protected function convertImageInDatabase($key)
     {
-        $webpExtension = ImageToWebp::getWebpRelativePath($this->getImageField());
-        $this->setImageField($webpExtension);
+        $webpRelativePath = ImageToWebp::getWebpRelativePath($this->$key);
+        $this->setImagesField($key, $webpRelativePath);
         $this->save();
-
-        return $webpExtension;
     }
 
-    public function saveImageAsWebp(string $imagePath = null, $width = null, $height = null)
+    public function saveImageAsWebp($width = null, $height = null)
     {
-        ImageToWebp::setPath($imagePath ?? $this->getImageField());
 
-        ImageToWebp::save();
+        foreach ($this->getImagesField() as $key => $fieldValue) {
 
-        $this->convertImageInDatabase();
+            ImageToWebp::setPath($this->$key);
 
-        Log::info(ImageToWebp::printInfo());
+            ImageToWebp::save();
+
+            $this->convertImageInDatabase($key);
+
+            Log::info(ImageToWebp::printInfo());
+
+        }
     }
 
-    public function overwriteImageAsWebp(string $imagePath = null, $width = null, $height = null)
+    public function overwriteImageAsWebp($width = null, $height = null)
     {
-        ImageToWebp::setPath($imagePath ?? $this->getImageField());
+        foreach ($this->getImagesField() as $key => $fieldValue) {
 
-        ImageToWebp::overwrite();
+            ImageToWebp::setPath($this->$key);
 
-        $this->convertImageInDatabase();
+            ImageToWebp::overwrite();
 
-        Log::info(ImageToWebp::printInfo());
+            $this->convertImageInDatabase($key);
+
+            Log::info(ImageToWebp::printInfo());
+
+        }
+
     }
 
-    public function resizeImage($width = 400, $height = 200, $imagePath = null): string
+    // $this->resizeImage('image', 400, 400)
+    public function resize($imageAttribute, $width = 400, $height = 200): string
     {
-        return ImageToWebp::getOrCreate($imagePath ?? $this->getImageField(), $width, $height);
+        return ImageToWebp::getOrCreate($this->$imageAttribute, $width, $height);
     }
 
-    protected function getImageField()
+    protected function getImagesField()
     {
-        return data_get($this, $this->imageField);
+        $imagesValues = [];
+        foreach ($this->imageFields as $imageField) {
+            $imagesValues[$imageField] = data_get($this, $imageField);
+        }
+        return $imagesValues;
+
     }
 
-    protected function setImageField($value)
+    protected function setImagesField($key, $value)
     {
-        return data_set($this, $this->imageField, $value);
+        $this->setAttribute($key, $value);
     }
 }

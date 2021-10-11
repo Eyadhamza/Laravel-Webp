@@ -56,6 +56,7 @@ class ImageToWebpService
      */
     public function save($quality = null): void
     {
+
         if ($this->exists($this->imageRelativePath, $this->width, $this->height)) {
             throw new Exception("Already exists!");
         }
@@ -71,6 +72,7 @@ class ImageToWebpService
         }
         clearstatcache();
         $this->optimizedSize();
+
     }
 
     /**
@@ -87,6 +89,8 @@ class ImageToWebpService
      */
     public function setPath($imagePath, $width = null, $height = null): void
     {
+
+
         if ($this->isNotImage($imagePath)) {
             throw new Exception('This is not an image!');
         }
@@ -130,6 +134,7 @@ class ImageToWebpService
 
     public function getWebpRelativePath($imagePath): string
     {
+
         $this->buildNewRelativeWebpPath($imagePath);
 
         return $this->webpRelativePath;
@@ -185,6 +190,7 @@ class ImageToWebpService
 
     public function printInfo(): string
     {
+
         return ' Image: ' .
             $this->imageRelativePath . ' Before: ' .
             number_format($this->originalSize / 1048576, 4) . ' after: ' .
