@@ -10,7 +10,7 @@ use function Pest\Laravel\withoutExceptionHandling;
 beforeEach(function () {
     TestModel::factory()->create([
         'image' => ImageToWebp::toFullPath($this->getTestImageRelativePath()),
-        'avatar' => ImageToWebp::toFullPath($this->getSecondTestImageRelativePath())
+        'avatar' => ImageToWebp::toFullPath($this->getSecondTestImageRelativePath()),
         ]);
 
 
@@ -93,7 +93,7 @@ it('must modify image url in the database by passing the path', function () {
 it('must resize as needed', function () {
     $testImage = TestModel::find(1);
 
-    $path = $testImage->resize('image',400, 400);
+    $path = $testImage->resize('image', 400, 400);
 
 
     Storage::disk()
@@ -101,7 +101,6 @@ it('must resize as needed', function () {
 
     Storage::disk()
         ->assertExists(ImageToWebp::getOldImageRelativePath());
-
 });
 
 it('must convert and overwrite all images in the directory ', function () {
@@ -153,13 +152,12 @@ test('command must convert all the image fields in the database ', function () {
 
     assertDatabaseHas('test_images', [
         'image' => ImageToWebp::getWebpFullPath($this->getTestImageRelativePath()),
-        'avatar' => ImageToWebp::getWebpFullPath($this->getSecondTestImageRelativePath())
+        'avatar' => ImageToWebp::getWebpFullPath($this->getSecondTestImageRelativePath()),
     ]);
 
     assertDatabaseMissing('test_images', [
         'image' => ImageToWebp::toFullPath($this->getTestImageRelativePath()),
     ]);
-
 });
 it('can support multiple image fields url in the database', function () {
     $testImage = TestModel::find(1);
@@ -168,7 +166,7 @@ it('can support multiple image fields url in the database', function () {
 
     assertDatabaseHas('test_images', [
         'image' => ImageToWebp::getWebpFullPath($this->getTestImageRelativePath()),
-        'avatar' => ImageToWebp::getWebpFullPath($this->getSecondTestImageRelativePath())
+        'avatar' => ImageToWebp::getWebpFullPath($this->getSecondTestImageRelativePath()),
     ]);
 });
 

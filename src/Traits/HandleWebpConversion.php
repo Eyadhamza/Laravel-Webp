@@ -11,7 +11,6 @@ trait HandleWebpConversion
     protected ImageToWebpService $imageService;
     protected bool $overwrite = false;
 
-
     public function convertImageInDatabase($key)
     {
         ImageToWebp::setPath($this->$key);
@@ -21,9 +20,7 @@ trait HandleWebpConversion
 
     public function saveImageAsWebp($width = null, $height = null)
     {
-
         foreach ($this->getImagesField() as $key => $fieldValue) {
-
             ImageToWebp::setPath($this->$key);
 
             ImageToWebp::save();
@@ -31,14 +28,12 @@ trait HandleWebpConversion
             $this->convertImageInDatabase($key);
 
             Log::info(ImageToWebp::printInfo());
-
         }
     }
 
     public function overwriteImageAsWebp($width = null, $height = null)
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
-
             ImageToWebp::setPath($this->$key);
 
             ImageToWebp::overwrite();
@@ -46,9 +41,7 @@ trait HandleWebpConversion
             $this->convertImageInDatabase($key);
 
             Log::info(ImageToWebp::printInfo());
-
         }
-
     }
 
     // $this->resizeImage('image', 400, 400)
@@ -63,8 +56,8 @@ trait HandleWebpConversion
         foreach ($this->imageFields as $imageField) {
             $imagesValues[$imageField] = data_get($this, $imageField);
         }
-        return $imagesValues;
 
+        return $imagesValues;
     }
 
     protected function setImagesField($key, $value)

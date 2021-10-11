@@ -56,7 +56,6 @@ class ImageToWebpService
      */
     public function save($quality = null): void
     {
-
         if ($this->exists($this->imageRelativePath, $this->width, $this->height)) {
             throw new Exception("Already exists!");
         }
@@ -72,7 +71,6 @@ class ImageToWebpService
         }
         clearstatcache();
         $this->optimizedSize();
-
     }
 
     /**
@@ -118,8 +116,6 @@ class ImageToWebpService
         }
     }
 
-
-
     public function getOldImageRelativePath(): string
     {
         return $this->imageRelativePath;
@@ -127,7 +123,6 @@ class ImageToWebpService
 
     public function getWebpRelativePath($imagePath): string
     {
-
         $this->buildNewRelativeWebpPath($imagePath);
 
         return $this->webpRelativePath;
@@ -147,14 +142,15 @@ class ImageToWebpService
                 . "_{$this->width}x{$this->height}"
                 . '.webp';
     }
+
     private function getSlicedImageAtExtension($imagePath = null): array
     {
-
         $imageParts = explode('.', $imagePath ?? $this->imageRelativePath);
         $sliced = array_slice($imageParts, 0, -1);
 
         return [implode('.', $sliced), end($imageParts)];
     }
+
     private function toPhysicalPath()
     {
         $this->webpPhysicalPath = Storage::path($this->webpRelativePath);
@@ -163,8 +159,8 @@ class ImageToWebpService
 
     public function toRelativePath(string $fullPath): ?string
     {
-
         $url = explode('storage/', $fullPath)[1] ?? null;
+
         return 'public/' . $url;
     }
 
@@ -190,7 +186,6 @@ class ImageToWebpService
 
     public function printInfo(): string
     {
-
         return ' Image: ' .
             $this->imageRelativePath . ' Before: ' .
             number_format($this->originalSize / 1048576, 4) . ' after: ' .
