@@ -20,7 +20,7 @@ composer require eyadhamza/laravel-webp
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="EyadHamza\LaravelWebp\LaravelWebpServiceProvider" --tag="laravel-webp-config"
+php artisan vendor:publish --provider="EyadHamza\LaravelWebp\LaravelWebpServiceProvider" --tag="webp-config"
 ```
 
 This is the contents of the published config file:
