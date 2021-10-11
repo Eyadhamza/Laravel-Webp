@@ -14,11 +14,11 @@ class TestModel extends Model
 
     protected $fillable = [
         'image',
-        'avatar'
+        'avatar',
     ];
 
     protected array $imageFields = [
         'image',
-        'avatar'
+        'avatar',
     ];
 }

@@ -51,6 +51,7 @@ class TestCase extends Orchestra
     {
         return 'public/test2.jpg';
     }
+
     public function getTempImageRelativePath(): string
     {
         return 'public/test.temp';

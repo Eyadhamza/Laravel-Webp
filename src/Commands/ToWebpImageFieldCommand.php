@@ -3,7 +3,6 @@
 namespace EyadHamza\LaravelWebp\Commands;
 
 use EyadHamza\LaravelWebp\ImageToWebp;
-use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
 use Illuminate\Console\Command;
 
 class ToWebpImageFieldCommand extends Command
@@ -22,13 +21,11 @@ class ToWebpImageFieldCommand extends Command
             if ($attribute) {
                 $object->fill([$attribute => ImageToWebp::getWebpRelativePath($object->$attribute)]);
                 $object->save();
-
             } else {
                 foreach (collect($object->getImagesField()) as $key => $fieldValue) {
                     $object->convertImageInDatabase($key);
                 }
             }
-
         });
     }
 }
