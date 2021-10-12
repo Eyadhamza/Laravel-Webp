@@ -12,8 +12,6 @@ beforeEach(function () {
         'image' => ImageToWebp::toFullPath($this->getTestImageRelativePath()),
         'avatar' => ImageToWebp::toFullPath($this->getSecondTestImageRelativePath()),
         ]);
-
-
     $this->refreshAndClean();
 });
 
