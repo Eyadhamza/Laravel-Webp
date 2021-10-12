@@ -3,6 +3,9 @@
 namespace EyadHamza\LaravelWebp\Services;
 
 use Exception;
+use EyadHamza\LaravelWebp\Exceptions\ImageAlreadyExists;
+use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
+use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -33,6 +36,10 @@ class ImageToWebpService
      */
     public function getOrCreate($imagePath, $width = null, $height = null): string
     {
+        if (is_null($imagePath)){
+            throw new NoImageGivenException('No Image was given!');
+        }
+
         if ($this->exists($imagePath, $width, $height)) {
             return $this->getWebpFullPath();
         }
@@ -57,7 +64,7 @@ class ImageToWebpService
     public function save($quality = null): void
     {
         if ($this->exists($this->imageRelativePath, $this->width, $this->height)) {
-            throw new Exception("Already exists!");
+            throw new ImageAlreadyExists("Already exists!");
         }
         $this->originalSize();
 
@@ -87,8 +94,12 @@ class ImageToWebpService
      */
     public function setPath($imagePath, $width = null, $height = null): void
     {
+        if (is_null($imagePath)){
+            throw new NoImageGivenException('No Image was given!');
+        }
+
         if ($this->isNotImage($imagePath)) {
-            throw new Exception('This is not an image!');
+            throw new NotImageException('This is not an image!');
         }
         $this->width = $width ?? $this->width;
         $this->height = $height ?? $this->height;

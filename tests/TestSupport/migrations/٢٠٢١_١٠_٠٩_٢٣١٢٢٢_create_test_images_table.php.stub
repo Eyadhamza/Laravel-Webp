@@ -13,7 +13,7 @@ class CreateTestImages extends Migration
     {
         Schema::create('test_images', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->string('avatar')->nullable();
             $table->timestamps();
         });

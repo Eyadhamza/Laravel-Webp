@@ -2,6 +2,7 @@
 
 namespace EyadHamza\LaravelWebp\Traits;
 
+use Exception;
 use EyadHamza\LaravelWebp\ImageToWebp;
 use EyadHamza\LaravelWebp\Services\ImageToWebpService;
 use Illuminate\Support\Facades\Log;
@@ -21,32 +22,47 @@ trait HandleWebpConversion
     public function saveImageAsWebp()
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
-            ImageToWebp::setPath($this->$key);
+            try {
+                ImageToWebp::setPath($this->$key);
 
-            ImageToWebp::save();
+                ImageToWebp::save();
 
-            $this->convertImageInDatabase($key);
+                $this->convertImageInDatabase($key);
 
-            Log::info(ImageToWebp::printInfo());
+                Log::info(ImageToWebp::printInfo());
+            } catch (Exception $e){
+                Log::info($e->getMessage());
+            }
+
         }
     }
 
     public function overwriteImageAsWebp()
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
-            ImageToWebp::setPath($this->$key);
+            try {
+                ImageToWebp::setPath($this->$key);
 
-            ImageToWebp::overwrite();
+                ImageToWebp::overwrite();
 
-            $this->convertImageInDatabase($key);
+                $this->convertImageInDatabase($key);
 
-            Log::info(ImageToWebp::printInfo());
+                Log::info(ImageToWebp::printInfo());
+            }catch (Exception $e){
+                Log::alert($e->getMessage());
+            }
+
         }
     }
 
     public function resize($imageAttribute, $width = 400, $height = 200): string
     {
-        return ImageToWebp::getOrCreate($this->$imageAttribute, $width, $height);
+        try {
+            return ImageToWebp::getOrCreate($this->$imageAttribute, $width, $height);
+        }catch (Exception $e){
+            Log::alert($e->getMessage());
+        }
+        return '';
     }
 
     public function getImagesField()

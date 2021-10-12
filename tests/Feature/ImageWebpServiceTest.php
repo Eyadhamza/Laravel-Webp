@@ -1,5 +1,7 @@
 <?php
 
+use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
+use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use EyadHamza\LaravelWebp\ImageToWebp;
 
 use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
@@ -168,5 +170,30 @@ it('can support multiple image fields url in the database', function () {
     ]);
 });
 
+it('should throw an exception if no image was given', function () {
+    $testImage = TestModel::create([
+        'image' => null
+    ]);
+    $this->expectException(NoImageGivenException::class);
 
+    ImageToWebp::setPath($testImage->image);
+    ImageToWebp::save();
+
+    assertDatabaseHas('test_images', [
+        'image' => null,
+    ]);
+});
+it('should throw an exception if the path is for an not image was given', function () {
+    $testImage = TestModel::create([
+        'image' => 'hellothere'
+    ]);
+    $this->expectException(NotImageException::class);
+
+    ImageToWebp::setPath($testImage->image);
+    ImageToWebp::save();
+
+    assertDatabaseHas('test_images', [
+        'image' => null,
+    ]);
+});
 afterEach(fn () => $this->refreshAndClean());
