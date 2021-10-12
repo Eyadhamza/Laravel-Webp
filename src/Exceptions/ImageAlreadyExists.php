@@ -2,4 +2,6 @@
 
 namespace EyadHamza\LaravelWebp\Exceptions;
 
-class ImageAlreadyExists extends \Exception { }
+class ImageAlreadyExists extends \Exception
+{
+}

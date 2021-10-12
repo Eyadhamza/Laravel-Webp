@@ -172,7 +172,7 @@ it('can support multiple image fields url in the database', function () {
 
 it('should throw an exception if no image was given', function () {
     $testImage = TestModel::create([
-        'image' => null
+        'image' => null,
     ]);
     $this->expectException(NoImageGivenException::class);
 
@@ -185,7 +185,7 @@ it('should throw an exception if no image was given', function () {
 });
 it('should throw an exception if the path is for an not image was given', function () {
     $testImage = TestModel::create([
-        'image' => 'hellothere'
+        'image' => 'hellothere',
     ]);
     $this->expectException(NotImageException::class);
 

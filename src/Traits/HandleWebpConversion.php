@@ -30,10 +30,9 @@ trait HandleWebpConversion
                 $this->convertImageInDatabase($key);
 
                 Log::info(ImageToWebp::printInfo());
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 Log::info($e->getMessage());
             }
-
         }
     }
 
@@ -48,10 +47,9 @@ trait HandleWebpConversion
                 $this->convertImageInDatabase($key);
 
                 Log::info(ImageToWebp::printInfo());
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 Log::alert($e->getMessage());
             }
-
         }
     }
 
@@ -59,9 +57,10 @@ trait HandleWebpConversion
     {
         try {
             return ImageToWebp::getOrCreate($this->$imageAttribute, $width, $height);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Log::alert($e->getMessage());
         }
+
         return '';
     }
 
