@@ -6,7 +6,7 @@ All notable changes to `Laravel-Webp` will be documented in this file.
 
 - initial release
 
-## 2.1.0 - 2021-10-11 
+## v1.1.0 - 2021-10-11 
 ### Strange, isn't it? another release in one day
 ```There were major changes, you know.```
 - $imageFields accepts an array insted of normal string to allow targeting and modifying more values
