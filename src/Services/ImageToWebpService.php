@@ -3,7 +3,6 @@
 namespace EyadHamza\LaravelWebp\Services;
 
 use Exception;
-use EyadHamza\LaravelWebp\Exceptions\ImageAlreadyExists;
 use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
 use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use Illuminate\Support\Facades\Storage;
@@ -148,7 +147,7 @@ class ImageToWebpService
     private function buildNewRelativeWebpPath($imagePath = null)
     {
         // don't build relative path if it exists!
-        if (Storage::exists($this->webpRelativePath)){
+        if (Storage::exists($this->webpRelativePath)) {
             return $this->webpRelativePath;
         }
 
@@ -156,7 +155,6 @@ class ImageToWebpService
                 ->getSlicedImageAtExtension($imagePath ?? null)[0]
                 . "_{$this->width}x{$this->height}"
                 . '.webp';
-
     }
 
     private function getSlicedImageAtExtension($imagePath = null): array
