@@ -1,6 +1,5 @@
 <?php
 
-use EyadHamza\LaravelWebp\Exceptions\ImageAlreadyExists;
 use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
 use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use EyadHamza\LaravelWebp\ImageToWebp;

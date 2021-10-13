@@ -22,7 +22,6 @@ class ToWebpImageFieldCommand extends Command
                 $object->save();
             } else {
                 foreach (collect($object->getImagesField()) as $key => $fieldValue) {
-
                     $object->convertImageInDatabase($key, ImageToWebp::make($fieldValue)->getWebpFullPath());
                 }
             }

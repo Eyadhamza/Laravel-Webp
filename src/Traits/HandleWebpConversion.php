@@ -5,13 +5,12 @@ namespace EyadHamza\LaravelWebp\Traits;
 use Exception;
 use EyadHamza\LaravelWebp\ImageToWebp;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 trait HandleWebpConversion
 {
     protected bool $overwrite = false;
 
-    public function convertImageInDatabase($key,$fullPath)
+    public function convertImageInDatabase($key, $fullPath)
     {
         $this->setImagesField($key, $fullPath);
         $this->save();
@@ -21,11 +20,10 @@ trait HandleWebpConversion
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
             try {
-
-            $fullPath = ImageToWebp::make($this->$key)
+                $fullPath = ImageToWebp::make($this->$key)
                     ->save();
 
-            $this->convertImageInDatabase($key, $fullPath);
+                $this->convertImageInDatabase($key, $fullPath);
 
                 Log::info(ImageToWebp::printInfo());
             } catch (Exception $e) {
@@ -41,7 +39,7 @@ trait HandleWebpConversion
                 $fullPath = ImageToWebp::make($this->$key)
                     ->overwrite();
 
-                $this->convertImageInDatabase($key,$fullPath);
+                $this->convertImageInDatabase($key, $fullPath);
 
                 Log::info(ImageToWebp::printInfo());
             } catch (Exception $e) {

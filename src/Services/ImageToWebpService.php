@@ -9,8 +9,6 @@ use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
-use PHPUnit\Framework\Constraint\StringContains;
-use function PHPUnit\Framework\stringContains;
 
 class ImageToWebpService
 {
@@ -27,7 +25,6 @@ class ImageToWebpService
     private ?int $width;
     private ?int $height;
     private ?int $quality;
-
 
     public function __construct()
     {
@@ -126,14 +123,12 @@ class ImageToWebpService
 
     public function getWebpFullPath(): ?string
     {
-
         return $this->webpFullPath;
     }
 
     private function buildNewRelativePath($relativePath, $width = null, $height = null): string
     {
         return $this->getSlicedPathAtExtension($relativePath, $width, $height) . '.webp';
-
     }
 
     private function getSlicedPathAtExtension($path, $width, $height): string
@@ -143,8 +138,8 @@ class ImageToWebpService
         if ($height && $width) {
             return implode('.', $sliced) . "_{$width}x{$height}";
         }
-        return implode('.', $sliced);
 
+        return implode('.', $sliced);
     }
 
     public function toPhysicalPath($relativePath): string
@@ -176,7 +171,7 @@ class ImageToWebpService
 
     private function isNotImage($imagePath): bool
     {
-        return !$this->isImage($imagePath);
+        return ! $this->isImage($imagePath);
     }
 
     public function printInfo(): string
@@ -209,9 +204,6 @@ class ImageToWebpService
 
     private function isWebp(): string
     {
-
         return strpos($this->imageRelativePath, '.webp') !== false;
     }
-
-
 }
