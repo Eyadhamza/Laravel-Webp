@@ -2,7 +2,6 @@
 
 namespace EyadHamza\LaravelWebp\Tests;
 
-use EyadHamza\LaravelWebp\ImageToWebp;
 use EyadHamza\LaravelWebp\LaravelWebpServiceProvider;
 use EyadHamza\LaravelWebp\Tests\TestSupport\migrations\CreateTestImages;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -51,6 +50,7 @@ class TestCase extends Orchestra
     {
         return 'public/test2.jpg';
     }
+
     public function getTestImageWebpRelativePath(): string
     {
         return 'public/test.webp';
@@ -60,6 +60,7 @@ class TestCase extends Orchestra
     {
         return 'public/test2.webp';
     }
+
     public function getTempImageRelativePath(): string
     {
         return 'public/test.temp';
