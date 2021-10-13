@@ -58,8 +58,6 @@ class ImageToWebpService
 
         $this->webpRelativePath = $this->buildNewRelativePath($this->imageRelativePath, $width, $height);
 
-        throw_if($this->exists(), new ImageAlreadyExists('This webp image exists!'));
-
         $this->webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
         $this->imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
 
@@ -74,11 +72,11 @@ class ImageToWebpService
         return Storage::exists($this->webpRelativePath);
     }
 
-    /**
-     * @throws Exception
-     */
     public function save($quality = null): string
     {
+        if ($this->exists()){
+            return $this->webpFullPath;
+        }
         $this->originalSize();
 
         if ($this->width && $this->height) {
