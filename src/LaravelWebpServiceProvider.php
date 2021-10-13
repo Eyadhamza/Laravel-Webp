@@ -3,6 +3,7 @@
 namespace EyadHamza\LaravelWebp;
 
 use EyadHamza\LaravelWebp\Commands\DirectoryToWebpCommand;
+use EyadHamza\LaravelWebp\Commands\AllModelsToWebpCommand;
 use EyadHamza\LaravelWebp\Commands\ToWebpImageFieldCommand;
 use EyadHamza\LaravelWebp\Commands\ToWepExtensionFieldCommand;
 use EyadHamza\LaravelWebp\Services\ImageToWebpService;
@@ -27,8 +28,9 @@ class LaravelWebpServiceProvider extends PackageServiceProvider
             ->hasConfigFile('webp')
             ->hasCommands([
                 ToWepExtensionFieldCommand::class,
-                ToWebpImageFieldCommand::class,
+                AllModelsToWebpCommand::class,
                 DirectoryToWebpCommand::class,
+                ToWebpImageFieldCommand::class
             ]);
     }
 }

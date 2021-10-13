@@ -4,12 +4,10 @@ namespace EyadHamza\LaravelWebp\Traits;
 
 use Exception;
 use EyadHamza\LaravelWebp\ImageToWebp;
-use EyadHamza\LaravelWebp\Services\ImageToWebpService;
 use Illuminate\Support\Facades\Log;
 
 trait HandleWebpConversion
 {
-    protected ImageToWebpService $imageService;
     protected bool $overwrite = false;
 
     public function convertImageInDatabase($key)
@@ -19,7 +17,7 @@ trait HandleWebpConversion
         $this->save();
     }
 
-    public function saveImageAsWebp()
+    public function saveImageAsWebp(): void
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
             try {
@@ -30,14 +28,14 @@ trait HandleWebpConversion
                 $this->convertImageInDatabase($key);
 
                 Log::info(ImageToWebp::printInfo());
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 Log::info($e->getMessage());
             }
 
         }
     }
 
-    public function overwriteImageAsWebp()
+    public function overwriteImageAsWebp(): void
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
             try {
@@ -48,7 +46,7 @@ trait HandleWebpConversion
                 $this->convertImageInDatabase($key);
 
                 Log::info(ImageToWebp::printInfo());
-            }catch (Exception $e){
+            } catch (Exception $e) {
                 Log::alert($e->getMessage());
             }
 
@@ -59,13 +57,13 @@ trait HandleWebpConversion
     {
         try {
             return ImageToWebp::getOrCreate($this->$imageAttribute, $width, $height);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             Log::alert($e->getMessage());
         }
         return '';
     }
 
-    public function getImagesField()
+    public function getImagesField(): array
     {
         $imagesValues = [];
         foreach ($this->imageFields as $imageField) {

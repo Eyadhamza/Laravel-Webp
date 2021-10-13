@@ -14,9 +14,8 @@ class ToWebpImageFieldCommand extends Command
     public function handle()
     {
         $model = $this->argument('model');
-        $attribute = $this->argument('attribute');
         $model = class_exists($model) ? app($model) : app("App\Models\\" . $model);
-
+        $attribute = $this->argument('attribute');
         $model->all()->each(function ($object) use ($attribute) {
             if ($attribute) {
                 $object->fill([$attribute => ImageToWebp::getWebpRelativePath($object->$attribute)]);
