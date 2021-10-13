@@ -2,7 +2,6 @@
 
 namespace EyadHamza\LaravelWebp\Commands;
 
-use EyadHamza\LaravelWebp\ImageToWebp;
 use Illuminate\Console\Command;
 
 class AllModelsToWebpCommand extends Command
