@@ -36,7 +36,7 @@ class ImageToWebpService
      */
     public function getOrCreate($imagePath, $width = null, $height = null): string
     {
-        if (is_null($imagePath)){
+        if (is_null($imagePath)) {
             throw new NoImageGivenException('No Image was given!');
         }
 
@@ -94,7 +94,7 @@ class ImageToWebpService
      */
     public function setPath($imagePath, $width = null, $height = null): void
     {
-        if (is_null($imagePath)){
+        if (is_null($imagePath)) {
             throw new NoImageGivenException('No Image was given!');
         }
 

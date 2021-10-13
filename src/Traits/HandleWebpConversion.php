@@ -31,7 +31,6 @@ trait HandleWebpConversion
             } catch (Exception $e) {
                 Log::info($e->getMessage());
             }
-
         }
     }
 
@@ -49,7 +48,6 @@ trait HandleWebpConversion
             } catch (Exception $e) {
                 Log::alert($e->getMessage());
             }
-
         }
     }
 
@@ -60,6 +58,7 @@ trait HandleWebpConversion
         } catch (Exception $e) {
             Log::alert($e->getMessage());
         }
+
         return '';
     }
 
