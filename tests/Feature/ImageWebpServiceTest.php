@@ -34,6 +34,25 @@ it('can save an image', function () {
         ->assertExists(ImageToWebp::getOldImageRelativePath());
 });
 
+it('can save an image with the right name', function () {
+    $testImage = TestModel::find(1);
+
+
+    $testImage->saveImageAsWebp();
+
+    $testImage->saveImageAsWebp();
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::getWebpRelativePath($this->getTestImageRelativePath()));
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::getOldImageRelativePath());
+
+    assertDatabaseHas('test_images', [
+        'image' => ImageToWebp::getWebpFullPath($this->getTestImageRelativePath()),
+    ]);
+});
+
 it('can overwrite an image', function () {
     withoutExceptionHandling();
     $testImage = TestModel::find(1);

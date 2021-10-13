@@ -29,6 +29,7 @@ class ImageToWebpService
         $this->width = config('webp.width');
         $this->height = config('webp.height');
         $this->quality = config('webp.quality');
+        $this->webpRelativePath = '';
     }
 
     /**
@@ -63,9 +64,6 @@ class ImageToWebpService
      */
     public function save($quality = null): void
     {
-        if ($this->exists($this->imageRelativePath, $this->width, $this->height)) {
-            throw new ImageAlreadyExists("Already exists!");
-        }
         $this->originalSize();
 
         if ($this->width && $this->height) {
@@ -112,6 +110,7 @@ class ImageToWebpService
         $this->imageRelativePath = $relativeImagePath ?? $imagePath;
 
         $this->buildNewRelativeWebpPath();
+
         $this->toPhysicalPath();
     }
 
@@ -148,10 +147,16 @@ class ImageToWebpService
 
     private function buildNewRelativeWebpPath($imagePath = null)
     {
+        // don't build relative path if it exists!
+        if (Storage::exists($this->webpRelativePath)){
+            return $this->webpRelativePath;
+        }
+
         $this->webpRelativePath = $this
                 ->getSlicedImageAtExtension($imagePath ?? null)[0]
                 . "_{$this->width}x{$this->height}"
                 . '.webp';
+
     }
 
     private function getSlicedImageAtExtension($imagePath = null): array
