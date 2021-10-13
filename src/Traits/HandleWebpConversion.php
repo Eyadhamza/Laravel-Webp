@@ -5,15 +5,15 @@ namespace EyadHamza\LaravelWebp\Traits;
 use Exception;
 use EyadHamza\LaravelWebp\ImageToWebp;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 trait HandleWebpConversion
 {
     protected bool $overwrite = false;
 
-    public function convertImageInDatabase($key)
+    public function convertImageInDatabase($key,$fullPath)
     {
-        ImageToWebp::setPath($this->$key);
-        $this->setImagesField($key, ImageToWebp::getWebpFullPath());
+        $this->setImagesField($key, $fullPath);
         $this->save();
     }
 
@@ -21,11 +21,11 @@ trait HandleWebpConversion
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
             try {
-                ImageToWebp::setPath($this->$key);
 
-                ImageToWebp::save();
+            $fullPath = ImageToWebp::make($this->$key)
+                    ->save();
 
-                $this->convertImageInDatabase($key);
+            $this->convertImageInDatabase($key, $fullPath);
 
                 Log::info(ImageToWebp::printInfo());
             } catch (Exception $e) {
@@ -38,11 +38,10 @@ trait HandleWebpConversion
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
             try {
-                ImageToWebp::setPath($this->$key);
+                $fullPath = ImageToWebp::make($this->$key)
+                    ->overwrite();
 
-                ImageToWebp::overwrite();
-
-                $this->convertImageInDatabase($key);
+                $this->convertImageInDatabase($key,$fullPath);
 
                 Log::info(ImageToWebp::printInfo());
             } catch (Exception $e) {
@@ -54,7 +53,8 @@ trait HandleWebpConversion
     public function resize($imageAttribute, $width = 400, $height = 200): string
     {
         try {
-            return ImageToWebp::getOrCreate($this->$imageAttribute, $width, $height);
+            return ImageToWebp::make($this->$imageAttribute, $width, $height)
+                ->save();
         } catch (Exception $e) {
             Log::alert($e->getMessage());
         }

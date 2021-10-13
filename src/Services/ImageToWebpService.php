@@ -9,6 +9,8 @@ use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
+use PHPUnit\Framework\Constraint\StringContains;
+use function PHPUnit\Framework\stringContains;
 
 class ImageToWebpService
 {
@@ -20,49 +22,62 @@ class ImageToWebpService
     private string $webpRelativePath;
     private string $imagePhysicalPath;
     private string $webpPhysicalPath;
+    private string $imageFullPath;
+    private string $webpFullPath;
     private ?int $width;
     private ?int $height;
     private ?int $quality;
+
 
     public function __construct()
     {
         $this->width = config('webp.width');
         $this->height = config('webp.height');
         $this->quality = config('webp.quality');
-        $this->webpRelativePath = '';
     }
 
     /**
-     * @throws Exception
+     * @throws \Throwable
      */
-    public function getOrCreate($imagePath, $width = null, $height = null): string
+    public function make($imagePath, $width = null, $height = null): ImageToWebpService
     {
-        if (is_null($imagePath)) {
-            throw new NoImageGivenException('No Image was given!');
-        }
+        throw_if(is_null($imagePath), new NoImageGivenException('No Image was given!'));
 
-        if ($this->exists($imagePath, $width, $height)) {
-            return $this->getWebpFullPath();
-        }
-        $this->save();
+        throw_if($this->isNotImage($imagePath), new NotImageException('This is not an image!'));
 
-        return $this->getWebpFullPath();
+
+        $this->width = $width ?? $this->width;
+        $this->height = $height ?? $this->height;
+
+        $relativeImagePath = null;
+        if (Str::contains($imagePath, 'http')) {
+            $relativeImagePath = $this->toRelativePath($imagePath);
+        }
+        $this->imageRelativePath = $relativeImagePath ?? $imagePath;
+
+
+        $this->webpRelativePath = $this->buildNewRelativePath($this->imageRelativePath, $width, $height);
+
+        throw_if($this->exists(), new ImageAlreadyExists('This webp image exists!'));
+
+        $this->webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
+        $this->imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
+
+        $this->webpFullPath = $this->toFullPath($this->webpRelativePath);
+        $this->imageFullPath = $this->toFullPath($this->imageRelativePath);
+
+        return $this;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function exists($imagePath, $width = null, $height = null): bool
+    public function exists(): bool
     {
-        $this->setPath($imagePath, $width, $height);
-
         return Storage::exists($this->webpRelativePath);
     }
 
     /**
      * @throws Exception
      */
-    public function save($quality = null): void
+    public function save($quality = null): string
     {
         $this->originalSize();
 
@@ -76,6 +91,8 @@ class ImageToWebpService
         }
         clearstatcache();
         $this->optimizedSize();
+
+        return $this->webpFullPath;
     }
 
     /**
@@ -85,33 +102,6 @@ class ImageToWebpService
     {
         $this->save($quality ?? $this->quality);
         $this->deleteOld();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function setPath($imagePath, $width = null, $height = null): void
-    {
-        if (is_null($imagePath)) {
-            throw new NoImageGivenException('No Image was given!');
-        }
-
-        if ($this->isNotImage($imagePath)) {
-            throw new NotImageException('This is not an image!');
-        }
-        $this->width = $width ?? $this->width;
-        $this->height = $height ?? $this->height;
-
-        $relativeImagePath = null;
-        if (Str::contains($imagePath, 'http')) {
-            $relativeImagePath = $this->toRelativePath($imagePath);
-        }
-
-        $this->imageRelativePath = $relativeImagePath ?? $imagePath;
-
-        $this->buildNewRelativeWebpPath();
-
-        $this->toPhysicalPath();
     }
 
     /**
@@ -131,46 +121,37 @@ class ImageToWebpService
         return $this->imageRelativePath;
     }
 
-    public function getWebpRelativePath($imagePath): string
+    public function getWebpRelativePath(): string
     {
-        $this->buildNewRelativeWebpPath($imagePath);
-
         return $this->webpRelativePath;
     }
 
-    public function getWebpFullPath($relativeImagePath = null): ?string
+    public function getWebpFullPath(): ?string
     {
-        $this->buildNewRelativeWebpPath($relativeImagePath ?? $this->imageRelativePath);
 
-        return $this->toFullPath($this->webpRelativePath);
+        return $this->webpFullPath;
     }
 
-    private function buildNewRelativeWebpPath($imagePath = null)
+    private function buildNewRelativePath($relativePath, $width = null, $height = null): string
     {
-        // don't build relative path if it exists!
-        if (Storage::exists($this->webpRelativePath)){
-            return $this->webpRelativePath;
-        }
-
-        $this->webpRelativePath = $this
-                ->getSlicedImageAtExtension($imagePath ?? null)[0]
-                . "_{$this->width}x{$this->height}"
-                . '.webp';
+        return $this->getSlicedPathAtExtension($relativePath, $width, $height) . '.webp';
 
     }
 
-    private function getSlicedImageAtExtension($imagePath = null): array
+    private function getSlicedPathAtExtension($path, $width, $height): string
     {
-        $imageParts = explode('.', $imagePath ?? $this->imageRelativePath);
+        $imageParts = explode('.', $path);
         $sliced = array_slice($imageParts, 0, -1);
+        if ($height && $width) {
+            return implode('.', $sliced) . "_{$width}x{$height}";
+        }
+        return implode('.', $sliced);
 
-        return [implode('.', $sliced), end($imageParts)];
     }
 
-    private function toPhysicalPath()
+    public function toPhysicalPath($relativePath): string
     {
-        $this->webpPhysicalPath = Storage::path($this->webpRelativePath);
-        $this->imagePhysicalPath = Storage::path($this->imageRelativePath);
+        return Storage::path($relativePath);
     }
 
     public function toRelativePath(string $fullPath): ?string
@@ -180,7 +161,7 @@ class ImageToWebpService
         return 'public/' . $url;
     }
 
-    public function toFullPath(string $relativePath): ?string
+    public function toFullPath($relativePath): string
     {
         return asset('storage/' . explode('public/', $relativePath)[1] ?? null);
     }
@@ -197,7 +178,7 @@ class ImageToWebpService
 
     private function isNotImage($imagePath): bool
     {
-        return ! $this->isImage($imagePath);
+        return !$this->isImage($imagePath);
     }
 
     public function printInfo(): string
@@ -227,4 +208,12 @@ class ImageToWebpService
     {
         return (1 - $this->optimizedSize / $this->originalSize) * 100;
     }
+
+    private function isWebp(): string
+    {
+
+        return strpos($this->imageRelativePath, '.webp') !== false;
+    }
+
+
 }

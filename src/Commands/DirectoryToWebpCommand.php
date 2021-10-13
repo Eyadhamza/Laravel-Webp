@@ -36,7 +36,7 @@ class DirectoryToWebpCommand extends Command
 
         foreach ($directoryFiles as $file) {
             try {
-                $this->imageService->setPath($file);
+                $this->imageService->make($file);
 
                 $shouldOverwrite ?
                     $this->imageService->overwrite() :
