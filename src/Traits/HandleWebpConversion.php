@@ -50,7 +50,6 @@ trait HandleWebpConversion
 
     public function resize($imageAttribute, $width = 400, $height = 200): string
     {
-
         try {
             return ImageToWebp::make($this->$imageAttribute, $width, $height)
                 ->save();

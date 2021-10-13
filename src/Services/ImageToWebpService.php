@@ -3,7 +3,6 @@
 namespace EyadHamza\LaravelWebp\Services;
 
 use Exception;
-use EyadHamza\LaravelWebp\Exceptions\ImageAlreadyExists;
 use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
 use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use Illuminate\Support\Facades\Storage;
@@ -71,7 +70,7 @@ class ImageToWebpService
 
     public function save($quality = null): string
     {
-        if ($this->exists()){
+        if ($this->exists()) {
             return $this->webpFullPath;
         }
         $this->originalSize();
