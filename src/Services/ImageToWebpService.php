@@ -56,8 +56,6 @@ class ImageToWebpService
 
 
         $this->webpRelativePath = $this->buildNewRelativePath($this->imageRelativePath, $width, $height);
-        $this->webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
-        $this->imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
         $this->webpFullPath = $this->toFullPath($this->webpRelativePath);
         $this->imageFullPath = $this->toFullPath($this->imageRelativePath);
 
@@ -70,6 +68,8 @@ class ImageToWebpService
             return $this->webpFullPath;
         }
         $this->originalSize();
+        $this->webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
+        $this->imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
 
         if ($this->width && $this->height) {
             Image::make($this->imagePhysicalPath)
