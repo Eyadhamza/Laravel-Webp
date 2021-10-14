@@ -6,12 +6,14 @@ use Exception;
 use EyadHamza\LaravelWebp\Exceptions\ImageAlreadyExists;
 use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
 use EyadHamza\LaravelWebp\Exceptions\NotImageException;
+use EyadHamza\LaravelWebp\Traits\HandlePathConversion;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class ImageToWebpService
 {
+    use HandlePathConversion;
     public const  IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
 
     private int $originalSize;
@@ -54,19 +56,12 @@ class ImageToWebpService
 
 
         $this->webpRelativePath = $this->buildNewRelativePath($this->imageRelativePath, $width, $height);
-
         $this->webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
         $this->imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
-
         $this->webpFullPath = $this->toFullPath($this->webpRelativePath);
         $this->imageFullPath = $this->toFullPath($this->imageRelativePath);
 
         return $this;
-    }
-
-    public function exists(): bool
-    {
-        return Storage::exists($this->webpRelativePath);
     }
 
     public function save($quality = null): string
@@ -88,6 +83,11 @@ class ImageToWebpService
         $this->optimizedSize();
 
         return $this->webpFullPath;
+    }
+
+    public function exists(): bool
+    {
+        return Storage::exists($this->webpRelativePath);
     }
 
     /**
@@ -126,38 +126,6 @@ class ImageToWebpService
         return $this->webpFullPath;
     }
 
-    private function buildNewRelativePath($relativePath, $width = null, $height = null): string
-    {
-        return $this->getSlicedPathAtExtension($relativePath, $width, $height) . '.webp';
-    }
-
-    private function getSlicedPathAtExtension($path, $width, $height): string
-    {
-        $imageParts = explode('.', $path);
-        $sliced = array_slice($imageParts, 0, -1);
-        if ($height && $width) {
-            return implode('.', $sliced) . "_{$width}x{$height}";
-        }
-
-        return implode('.', $sliced);
-    }
-
-    public function toPhysicalPath($relativePath): string
-    {
-        return Storage::path($relativePath);
-    }
-
-    public function toRelativePath(string $fullPath): ?string
-    {
-        $url = explode('storage/', $fullPath)[1] ?? null;
-
-        return 'public/' . $url;
-    }
-
-    public function toFullPath($relativePath): string
-    {
-        return asset('storage/' . explode('public/', $relativePath)[1] ?? null);
-    }
 
     private function isImage($file): bool
     {
