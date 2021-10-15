@@ -158,7 +158,7 @@ class ImageToWebpService
         return $this->originalSize;
     }
 
-    private function optimizedSize(): int
+    private function optimizedSize()
     {
         $this->optimizedSize = Storage::size($this->webpRelativePath);
     }

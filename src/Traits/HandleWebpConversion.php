@@ -21,12 +21,13 @@ trait HandleWebpConversion
         foreach ($this->getImagesField() as $key => $fieldValue) {
             if ($this->$key) {
                 try {
-                    $fullPath = ImageToWebp::make($this->$key)
-                        ->save();
+                    $image = ImageToWebp::make($this->$key);
+                    $fullPath = $this->overwrite ? $image->overwrite() : $image->save();
 
-                    $this->convertImageInDatabase($key, $fullPath);
-
-                    Log::info(ImageToWebp::printInfo());
+                    if ($this->$key != $fullPath){
+                        $this->convertImageInDatabase($key, $fullPath);
+                        Log::info(ImageToWebp::printInfo());
+                    }
                 } catch (Exception $e) {
                     Log::info($e->getMessage());
                 }
@@ -36,20 +37,8 @@ trait HandleWebpConversion
 
     public function overwriteImageAsWebp(): void
     {
-        foreach ($this->getImagesField() as $key => $fieldValue) {
-            if ($this->$key) {
-                try {
-                    $fullPath = ImageToWebp::make($this->$key)
-                        ->overwrite();
-
-                    $this->convertImageInDatabase($key, $fullPath);
-
-                    Log::info(ImageToWebp::printInfo());
-                } catch (Exception $e) {
-                    Log::alert($e->getMessage());
-                }
-            }
-        }
+        $this->overwrite = true;
+        $this->saveImageAsWebp();
     }
 
     public function resize($imageAttribute, $width = 400, $height = 200): string
