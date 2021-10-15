@@ -19,7 +19,7 @@ trait HandleWebpConversion
     public function saveImageAsWebp(): void
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
-            if ($this->$key){
+            if ($this->$key) {
                 try {
                     $fullPath = ImageToWebp::make($this->$key)
                         ->save();
@@ -31,14 +31,13 @@ trait HandleWebpConversion
                     Log::info($e->getMessage());
                 }
             }
-
         }
     }
 
     public function overwriteImageAsWebp(): void
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
-            if ($this->$key){
+            if ($this->$key) {
                 try {
                     $fullPath = ImageToWebp::make($this->$key)
                         ->overwrite();
@@ -50,7 +49,6 @@ trait HandleWebpConversion
                     Log::alert($e->getMessage());
                 }
             }
-
         }
     }
 

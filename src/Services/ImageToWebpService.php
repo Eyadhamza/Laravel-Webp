@@ -124,7 +124,6 @@ class ImageToWebpService
         return $this->webpFullPath;
     }
 
-
     private function isImage($file): bool
     {
         $filePathParts = explode('.', $file);
@@ -154,6 +153,7 @@ class ImageToWebpService
         if (Storage::exists($this->imageRelativePath)) {
             $this->originalSize = Storage::size($this->imageRelativePath);
         }
+
         return $this->originalSize;
     }
 

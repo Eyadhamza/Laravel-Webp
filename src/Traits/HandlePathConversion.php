@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Storage;
 
 trait HandlePathConversion
 {
-
     protected function buildNewRelativePath($relativePath, $width = null, $height = null): string
     {
         return $this->getSlicedPathAtExtension($relativePath, $width, $height) . '.webp';
