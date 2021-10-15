@@ -2,6 +2,7 @@
 
 namespace EyadHamza\LaravelWebp\Commands;
 
+use Exception;
 use EyadHamza\LaravelWebp\Services\ImageToWebpService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -43,7 +44,7 @@ class DirectoryToWebpCommand extends Command
                     $this->imageService->save();
 
                 $this->info($this->imageService->printInfo());
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->info($e->getMessage());
 
                 continue;

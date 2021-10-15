@@ -35,7 +35,7 @@ class ImageToWebpService
     }
 
     /**
-     * @throws \Throwable
+     * @throws Exception|\Throwable
      */
     public function make($imagePath, $width = null, $height = null): ImageToWebpService
     {
