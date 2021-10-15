@@ -31,6 +31,7 @@ class ImageToWebpService
         $this->height = config('webp.height');
         $this->quality = config('webp.quality');
         $this->originalSize = 0;
+        $this->optimizedSize = 0;
     }
 
     /**
@@ -149,7 +150,7 @@ class ImageToWebpService
             number_format($this->sizeDiff(), 2);
     }
 
-    private function originalSize()
+    private function originalSize(): int
     {
         if (Storage::exists($this->imageRelativePath)) {
             $this->originalSize = Storage::size($this->imageRelativePath);
@@ -157,7 +158,7 @@ class ImageToWebpService
         return $this->originalSize;
     }
 
-    private function optimizedSize()
+    private function optimizedSize(): int
     {
         $this->optimizedSize = Storage::size($this->webpRelativePath);
     }
