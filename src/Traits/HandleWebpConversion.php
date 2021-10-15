@@ -19,38 +19,43 @@ trait HandleWebpConversion
     public function saveImageAsWebp(): void
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
-            try {
-                $fullPath = ImageToWebp::make($this->$key)
-                    ->save();
+            if ($this->$key){
+                try {
+                    $fullPath = ImageToWebp::make($this->$key)
+                        ->save();
 
-                $this->convertImageInDatabase($key, $fullPath);
+                    $this->convertImageInDatabase($key, $fullPath);
 
-                Log::info(ImageToWebp::printInfo());
-            } catch (Exception $e) {
-                Log::info($e->getMessage());
+                    Log::info(ImageToWebp::printInfo());
+                } catch (Exception $e) {
+                    Log::info($e->getMessage());
+                }
             }
+
         }
     }
 
     public function overwriteImageAsWebp(): void
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
-            try {
-                $fullPath = ImageToWebp::make($this->$key)
-                    ->overwrite();
+            if ($this->$key){
+                try {
+                    $fullPath = ImageToWebp::make($this->$key)
+                        ->overwrite();
 
-                $this->convertImageInDatabase($key, $fullPath);
+                    $this->convertImageInDatabase($key, $fullPath);
 
-                Log::info(ImageToWebp::printInfo());
-            } catch (Exception $e) {
-                Log::alert($e->getMessage());
+                    Log::info(ImageToWebp::printInfo());
+                } catch (Exception $e) {
+                    Log::alert($e->getMessage());
+                }
             }
+
         }
     }
 
     public function resize($imageAttribute, $width = 400, $height = 200): string
     {
-
         try {
             return ImageToWebp::make($this->$imageAttribute, $width, $height)
                 ->save();

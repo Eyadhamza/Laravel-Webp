@@ -20,8 +20,6 @@ class ImageToWebpService
     private int $optimizedSize;
     private string $imageRelativePath;
     private string $webpRelativePath;
-    private string $imagePhysicalPath;
-    private string $webpPhysicalPath;
     private string $imageFullPath;
     private string $webpFullPath;
     private ?int $width;
@@ -69,16 +67,16 @@ class ImageToWebpService
             return $this->webpFullPath;
         }
         $this->originalSize();
-        $this->webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
-        $this->imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
+        $webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
+        $imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
 
         if ($this->width && $this->height) {
-            Image::make($this->imagePhysicalPath)
+            Image::make($imagePhysicalPath)
                 ->resize($this->width, $this->height)
-                ->save($this->webpPhysicalPath, $quality ?? $this->quality, 'webp');
+                ->save($webpPhysicalPath, $quality ?? $this->quality, 'webp');
         } else {
-            Image::make($this->imagePhysicalPath)
-                ->save($this->webpPhysicalPath, $quality ?? $this->quality, 'webp');
+            Image::make($imagePhysicalPath)
+                ->save($webpPhysicalPath, $quality ?? $this->quality, 'webp');
         }
         clearstatcache();
         $this->optimizedSize();
