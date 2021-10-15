@@ -24,7 +24,7 @@ trait HandleWebpConversion
                     $image = ImageToWebp::make($this->$key);
                     $fullPath = $this->overwrite ? $image->overwrite() : $image->save();
 
-                    if ($this->$key != $fullPath){
+                    if ($this->$key != $fullPath) {
                         $this->convertImageInDatabase($key, $fullPath);
                         Log::info(ImageToWebp::printInfo());
                     }
