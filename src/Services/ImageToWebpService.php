@@ -15,8 +15,8 @@ class ImageToWebpService
     use HandlePathConversion;
     public const  IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
 
-    private int $originalSize;
-    private int $optimizedSize;
+    private float $originalSize;
+    private float $optimizedSize;
     private string $imageRelativePath;
     private string $webpRelativePath;
     private string $imageFullPath;
@@ -30,8 +30,8 @@ class ImageToWebpService
         $this->width = config('webp.width');
         $this->height = config('webp.height');
         $this->quality = config('webp.quality');
-        $this->originalSize = 0;
-        $this->optimizedSize = 0;
+        $this->originalSize = 0.0;
+        $this->optimizedSize = 0.0;
     }
 
     /**
