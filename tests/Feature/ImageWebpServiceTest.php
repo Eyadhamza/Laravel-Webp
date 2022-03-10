@@ -33,6 +33,19 @@ it('can save an image', function () {
     Storage::disk()
         ->assertExists(ImageToWebp::getOldImageRelativePath());
 });
+it('can save an image with a very small size', function () {
+    $testImage = TestModel::find(1);
+    $testImage->image = asset('/storage/'.'test3.png');
+
+
+    $testImage->saveImageAsWebp();
+
+    Storage::disk()
+        ->assertExists('public/test3.webp');
+
+    Storage::disk()
+        ->assertExists(ImageToWebp::getOldImageRelativePath());
+});
 
 it('can save an image with the right name', function () {
     $testImage = TestModel::find(1);

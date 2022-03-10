@@ -13,6 +13,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 class ImageToWebpService
 {
     use HandlePathConversion;
+
     public const  IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
 
     private float $originalSize;
@@ -142,7 +143,7 @@ class ImageToWebpService
 
     private function isNotImage($imagePath): bool
     {
-        return ! $this->isImage($imagePath);
+        return !$this->isImage($imagePath);
     }
 
     public function printInfo(): string
@@ -170,7 +171,7 @@ class ImageToWebpService
 
     private function sizeDiff()
     {
-        return (1 - $this->optimizedSize / $this->originalSize) * 100;
+        return (1 - $this->optimizedSize + 1 / $this->originalSize + 1) * 100;
     }
 
     private function isWebp(): string
