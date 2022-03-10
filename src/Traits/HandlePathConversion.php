@@ -36,7 +36,6 @@ trait HandlePathConversion
 
     public function toFullPath($relativePath): string
     {
-
         return asset('storage/' . explode('public/', $relativePath)[1] ?? null);
     }
 }

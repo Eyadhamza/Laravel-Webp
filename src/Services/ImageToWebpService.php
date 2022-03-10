@@ -143,7 +143,7 @@ class ImageToWebpService
 
     private function isNotImage($imagePath): bool
     {
-        return !$this->isImage($imagePath);
+        return ! $this->isImage($imagePath);
     }
 
     public function printInfo(): string
