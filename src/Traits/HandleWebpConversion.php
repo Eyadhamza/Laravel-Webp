@@ -23,10 +23,10 @@ trait HandleWebpConversion
                 try {
                     $image = ImageToWebp::make($this->$key);
                     $fullPath = $this->overwrite ? $image->overwrite() : $image->save();
-
+                    Log::info(ImageToWebp::printInfo());
                     if ($this->$key != $fullPath){
                         $this->convertImageInDatabase($key, $fullPath);
-                        Log::info(ImageToWebp::printInfo());
+
                     }
                 } catch (Exception $e) {
                     Log::info($e->getMessage());

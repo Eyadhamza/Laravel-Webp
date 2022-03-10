@@ -5,6 +5,7 @@ use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use EyadHamza\LaravelWebp\ImageToWebp;
 
 use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use Illuminate\Support\Facades\Storage;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\withoutExceptionHandling;

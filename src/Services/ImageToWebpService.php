@@ -39,7 +39,11 @@ class ImageToWebpService
      */
     public function make($imagePath, $width = null, $height = null): ImageToWebpService
     {
-        throw_if(is_null($imagePath), new NoImageGivenException('No Image was given!'));
+        throw_if(
+            is_null($imagePath),
+            new NoImageGivenException('No Image was given!'
+            )
+        );
 
         throw_if($this->isNotImage($imagePath), new NotImageException('This is not an image!'));
 
