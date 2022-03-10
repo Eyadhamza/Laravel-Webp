@@ -20,12 +20,12 @@ trait HandleWebpConversion
     {
         foreach ($this->getImagesField() as $key => $fieldValue) {
             if ($this->$key) {
-                    $image = ImageToWebp::make($this->$key);
-                    $fullPath = $this->overwrite ? $image->overwrite() : $image->save();
-                    Log::info(ImageToWebp::printInfo());
-                    if ($this->$key != $fullPath) {
-                        $this->convertImageInDatabase($key, $fullPath);
-                    }
+                $image = ImageToWebp::make($this->$key);
+                $fullPath = $this->overwrite ? $image->overwrite() : $image->save();
+                Log::info(ImageToWebp::printInfo());
+                if ($this->$key != $fullPath) {
+                    $this->convertImageInDatabase($key, $fullPath);
+                }
             }
         }
     }
