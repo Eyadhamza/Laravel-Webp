@@ -31,7 +31,6 @@ class ImageToWebpService
         $this->width = config('webp.width');
         $this->height = config('webp.height');
         $this->quality = config('webp.quality');
-
     }
 
     /**
