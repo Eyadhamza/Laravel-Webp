@@ -171,7 +171,7 @@ class ImageToWebpService
 
     private function sizeDiff()
     {
-        return (1 - $this->optimizedSize + 1 / $this->originalSize + 1) * 100;
+        return (1 - ($this->optimizedSize + 1) / ($this->originalSize + 1)) * 100;
     }
 
     private function isWebp(): string
