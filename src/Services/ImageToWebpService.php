@@ -41,7 +41,8 @@ class ImageToWebpService
     {
         throw_if(
             is_null($imagePath),
-            new NoImageGivenException('No Image was given!'
+            new NoImageGivenException(
+                'No Image was given!'
             )
         );
 
