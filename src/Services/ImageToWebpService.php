@@ -149,9 +149,8 @@ class ImageToWebpService
     {
         return ' Image: ' .
             $this->imageRelativePath . ' Before: ' .
-            number_format($this->originalSize / 1048576, 4) . ' after: ' .
-            number_format($this->optimizedSize / 1048576, 4) . ' Percentage: ' .
-            number_format($this->sizeDiff(), 2);
+            number_format($this->originalSize / 1048576, 4) .' MB' . ' after: ' .
+            number_format($this->optimizedSize / 1048576, 4) . ' MB';
     }
 
     private function originalSize(): int
@@ -166,11 +165,6 @@ class ImageToWebpService
     private function optimizedSize()
     {
         $this->optimizedSize = Storage::size($this->webpRelativePath);
-    }
-
-    private function sizeDiff()
-    {
-        return (1 - ($this->optimizedSize  / $this->originalSize ) * 100);
     }
 
     private function isWebp(): string
