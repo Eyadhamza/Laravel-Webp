@@ -3,10 +3,9 @@
 namespace EyadHamza\LaravelWebp\Tests;
 
 use EyadHamza\LaravelWebp\LaravelWebpServiceProvider;
-use EyadHamza\LaravelWebp\Tests\TestSupport\migrations\CreateTestImages;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -16,7 +15,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'EyadHamza\LaravelWebp\Tests\TestSupport\factories\\'.class_basename($modelName).'Factory'
+            fn(string $modelName) => 'EyadHamza\LaravelWebp\Tests\TestSupport\factories\\' . class_basename($modelName) . 'Factory'
         );
     }
 
@@ -30,63 +29,16 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-
-        $migration = include_once __DIR__.'/TestSupport/migrations/٢٠٢١_١٠_٠٩_٢٣١٢٢٢_create_test_images_table.php.stub';
-        (new CreateTestImages())->up();
+        $this->createTestTable();
     }
 
-    public function getTestDirectory(): string
+    private function createTestTable(): void
     {
-        return __DIR__.'/TestSupport'.'/testimages';
-    }
-
-    public function getTestImageRelativePath(): string
-    {
-        return 'public/test.jpg';
-    }
-
-    public function getSecondTestImageRelativePath(): string
-    {
-        return 'public/test2.jpg';
-    }
-
-    public function getTestImageWebpRelativePath(): string
-    {
-        return 'public/test.webp';
-    }
-
-    public function getSecondTestImageWebpRelativePath(): string
-    {
-        return 'public/test2.webp';
-    }
-
-    public function getTempImageRelativePath(): string
-    {
-        return 'public/test.temp';
-    }
-
-    public function refreshAndClean()
-    {
-        if (! Storage::exists($this->getTestImageRelativePath())) {
-            Storage::copy($this->getTempImageRelativePath(), $this->getTestImageRelativePath());
-        }
-        if (! Storage::exists($this->getSecondTestImageRelativePath())) {
-            Storage::copy($this->getTempImageRelativePath(), $this->getSecondTestImageRelativePath());
-        }
-        if ($this->getTestImageWebpRelativePath()) {
-            Storage::delete($this->getTestImageWebpRelativePath());
-        }
-        if ($this->getSecondTestImageWebpRelativePath()) {
-            Storage::delete($this->getSecondTestImageWebpRelativePath());
-        }
-    }
-
-    public function symLink()
-    {
-        App::make('files')->link(
-            $this->getTestDirectory(),
-            Storage::path('public')
-        );
+        Schema::create('test_images', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('image')->nullable();
+            $table->string('avatar')->nullable();
+            $table->timestamps();
+        });
     }
 }

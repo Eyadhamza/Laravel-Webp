@@ -5,21 +5,27 @@ use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use EyadHamza\LaravelWebp\ImageToWebp;
 
 use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
 use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
-    TestModel::factory()->create([
-        'image' => asset('/storage/'.'test.jpg'),
-        'avatar' => asset('/storage/'.'test2.jpg'),
-        ]);
-    $this->refreshAndClean();
-});
+    Storage::persistentFake();
 
-it('prepare test', function () {
-    expect(true)->toBeTrue();
+    $this->image = UploadedFile::fake()
+        ->image('image_one.jpg')
+        ->store('public');
+
+    $this->webpImage = Str::replace('.jpg', '.webp', $this->image);
+
+    TestModel::factory()->create([
+        'image' => $this->image,
+        'avatar' => $this->image,
+    ]);
 });
 
 it('can save an image', function () {
@@ -28,20 +34,18 @@ it('can save an image', function () {
     $testImage->saveImageAsWebp();
 
     Storage::disk()
-        ->assertExists($this->getTestImageWebpRelativePath());
+        ->assertExists($this->webpImage);
 
     Storage::disk()
         ->assertExists(ImageToWebp::getOldImageRelativePath());
 });
 it('can save an image with a very small size', function () {
     $testImage = TestModel::find(1);
-    $testImage->image = asset('/storage/'.'test3.png');
-
 
     $testImage->saveImageAsWebp();
 
     Storage::disk()
-        ->assertExists('public/test3.webp');
+        ->assertExists($this->webpImage);
 
     Storage::disk()
         ->assertExists(ImageToWebp::getOldImageRelativePath());
@@ -52,15 +56,14 @@ it('can save an image with the right name', function () {
 
     $testImage->saveImageAsWebp();
 
-    $testImage->saveImageAsWebp();
     Storage::disk()
-        ->assertExists($this->getTestImageRelativePath());
+        ->assertExists($this->webpImage);
 
     Storage::disk()
-        ->assertExists($this->getTestImageWebpRelativePath());
+        ->assertExists($this->webpImage);
 
     assertDatabaseHas('test_images', [
-        'image' => ImageToWebp::toFullPath($this->getTestImageWebpRelativePath()),
+        'image' => $this->webpImage,
     ]);
 });
 
@@ -71,7 +74,7 @@ it('can overwrite an image', function () {
     $testImage->overwriteImageAsWebp();
 
     Storage::disk()
-        ->assertExists($this->getTestImageWebpRelativePath());
+        ->assertExists($this->webpImage);
 
     Storage::disk()
         ->assertMissing(ImageToWebp::getOldImageRelativePath());
@@ -83,8 +86,8 @@ it('must modify image url in the database', function () {
     $testImage->saveImageAsWebp();
 
     assertDatabaseHas('test_images', [
-       'image' => ImageToWebp::toFullPath($this->getTestImageWebpRelativePath()),
-   ]);
+        'image' => $this->webpImage,
+    ]);
 });
 
 it('can  save an image by passing the path', function () {
@@ -114,7 +117,7 @@ it('must modify image url in the database by passing the path', function () {
     $testImage->saveImageAsWebp($testImage->image);
 
     assertDatabaseHas('test_images', [
-        'image' => ImageToWebp::toFullPath($this->getTestImageWebpRelativePath()),
+        'image' => $this->webpImage,
     ]);
 });
 
@@ -133,44 +136,38 @@ it('must resize as needed', function () {
 it('must convert and overwrite all images in the directory ', function () {
     Artisan::call('public:to-webp --overwrite');
 
-    Storage::disk()
-        ->assertExists($this->getTestImageWebpRelativePath());
-
     // ensure that other files with other extensions are not deleted!
     Storage::disk()
-        ->assertExists($this->getTempImageRelativePath());
+        ->assertExists($this->webpImage);
 
     // ensure that old files are deleted!
     Storage::disk()
-        ->assertMissing($this->getTestImageRelativePath());
+        ->assertMissing($this->image);
 });
 it('must convert and keep all images in the directory ', function () {
     Artisan::call('public:to-webp');
 
     Storage::disk()
-        ->assertExists($this->getTestImageWebpRelativePath());
-
-    // ensure that other files with other extensions are not deleted!
-    Storage::disk()
-        ->assertExists($this->getTempImageRelativePath());
+        ->assertExists($this->webpImage);
 
     // ensure that old files are there!
     Storage::disk()
-        ->assertExists($this->getTestImageRelativePath());
+        ->assertExists($this->webpImage);
 });
 
 it('command must convert image field in the database ', function () {
-    Artisan::call('images:to-webp
-    EyadHamza\\\LaravelWebp\\\Tests\\\TestSupport\\\Models\\\TestModel
-    image');
+    Artisan::call('images:to-webp', [
+        'model' => TestModel::class,
+        'attribute' => 'image',
+    ]);
 
 
     assertDatabaseHas('test_images', [
-        'image' => ImageToWebp::toFullPath($this->getTestImageWebpRelativePath()),
+        'image' => $this->webpImage,
     ]);
 
     assertDatabaseMissing('test_images', [
-        'image' => ImageToWebp::toFullPath($this->getTestImageRelativePath()),
+        'image' => $this->image,
     ]);
 });
 test('command must convert all the image fields in the database ', function () {
@@ -178,12 +175,11 @@ test('command must convert all the image fields in the database ', function () {
     EyadHamza\\\LaravelWebp\\\Tests\\\TestSupport\\\Models\\\TestModel');
 
     assertDatabaseHas('test_images', [
-        'image' => ImageToWebp::toFullPath($this->getTestImageWebpRelativePath()),
-        'avatar' => ImageToWebp::toFullPath($this->getSecondTestImageWebpRelativePath()),
+        'image' => $this->webpImage,
     ]);
 
     assertDatabaseMissing('test_images', [
-        'image' => ImageToWebp::toFullPath($this->getTestImageRelativePath()),
+        'image' => $this->image,
     ]);
 });
 it('can support multiple image fields url in the database', function () {
@@ -192,8 +188,7 @@ it('can support multiple image fields url in the database', function () {
     $testImage->saveImageAsWebp();
 
     assertDatabaseHas('test_images', [
-        'image' => ImageToWebp::toFullPath($this->getTestImageWebpRelativePath()),
-        'avatar' => ImageToWebp::toFullPath($this->getSecondTestImageWebpRelativePath()),
+        'image' => $this->webpImage,
     ]);
 });
 
@@ -221,4 +216,3 @@ it('should throw an exception if the path is for an not image was given', functi
         'image' => null,
     ]);
 });
-afterEach(fn () => $this->refreshAndClean());

@@ -85,7 +85,7 @@ class ImageToWebpService
         clearstatcache();
         $this->optimizedSize();
 
-        return $this->webpFullPath;
+        return $this->webpRelativePath;
     }
 
     public function exists(): bool

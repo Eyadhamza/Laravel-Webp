@@ -10,7 +10,7 @@ trait HandleWebpConversion
 {
     protected bool $overwrite = false;
 
-    public function convertImageInDatabase($key, $fullPath)
+    public function convertImageInDatabase($key, $fullPath): void
     {
         $this->setImagesField($key, $fullPath);
         $this->save();

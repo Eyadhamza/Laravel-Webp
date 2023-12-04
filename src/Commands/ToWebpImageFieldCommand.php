@@ -18,11 +18,11 @@ class ToWebpImageFieldCommand extends Command
         $attribute = $this->argument('attribute');
         $model->all()->each(function ($object) use ($attribute) {
             if ($attribute) {
-                $object->fill([$attribute => ImageToWebp::make($object->$attribute)->getWebpFullPath()]);
+                $object->fill([$attribute => ImageToWebp::make($object->$attribute)->getWebpRelativePath()]);
                 $object->save();
             } else {
                 foreach (collect($object->getImagesField()) as $key => $fieldValue) {
-                    $object->convertImageInDatabase($key, ImageToWebp::make($fieldValue)->getWebpFullPath());
+                    $object->convertImageInDatabase($key, ImageToWebp::make($fieldValue)->getWebpRelativePath());
                 }
             }
         });
