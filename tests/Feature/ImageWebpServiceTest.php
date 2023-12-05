@@ -9,85 +9,57 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\ImageManagerStatic as Image;
 use function Pest\Laravel\assertDatabaseHas;
 use function Pest\Laravel\assertDatabaseMissing;
-use function Pest\Laravel\withoutExceptionHandling;
 
 beforeEach(function () {
-    Storage::persistentFake();
+    Storage::fake();
 
     $this->image = UploadedFile::fake()
         ->image('image.jpg')
         ->store('public');
 
+
     $this->webpImage = Str::replace('.jpg', '.webp', $this->image);
 
-    TestModel::factory()->create([
+    $this->testModel = TestModel::factory()->create([
         'image' => $this->image,
-        'avatar' => $this->image,
-    ]);
-
-    $this->imageService = WebpService::make($this->image);
-});
-
-it('can save an image', function () {
-    $testImage = TestModel::find(1);
-
-    $testImage->saveImageAsWebp();
-
-    Storage::disk()
-        ->assertExists($this->webpImage);
-
-    Storage::disk()
-        ->assertExists($this->image);
-});
-it('can save an image with a very small size', function () {
-    $testImage = TestModel::find(1);
-
-    $testImage->saveImageAsWebp();
-
-    Storage::disk()
-        ->assertExists($this->webpImage);
-
-    Storage::disk()
-        ->assertExists($this->image);
-});
-
-it('can save an image with the right name', function () {
-    $testImage = TestModel::find(1);
-
-    $testImage->saveImageAsWebp();
-
-    Storage::disk()
-        ->assertExists($this->webpImage);
-
-    Storage::disk()
-        ->assertExists($this->webpImage);
-
-    assertDatabaseHas('test_images', [
-        'image' => $this->webpImage,
     ]);
 });
 
-it('can overwrite an image', function () {
-    withoutExceptionHandling();
-    TestModel::find(1);
+it('can cast an image to webp and store it on disk', function () {
+    Storage::disk()->assertExists($this->testModel->image);
 
+    Str::endsWith($this->testModel->image, '.webp');
+});
+
+it('can overwrite the old image as the default behavior', function () {
     Storage::disk()
-        ->assertExists($this->imageService->getWebpRelativePath());
+        ->assertExists($this->testModel->image);
 
     Storage::disk()
         ->assertMissing($this->image);
 });
 
-it('must modify image url in the database', function () {
-    $testImage = TestModel::find(1);
+it('can prevent overwrite the old image as the user config behavior', function () {
+    config()->set('webp.overwrite', false);
 
-    $testImage->saveImageAsWebp();
+    $this->secondImage = UploadedFile::fake()
+        ->image('image.jpg')
+        ->store('public');
 
-    assertDatabaseHas('test_images', [
-        'image' => $this->webpImage,
+    $this->secondWebpImage = Str::replace('.jpg', '.webp', $this->secondImage);
+
+    $this->secondTestModel = TestModel::factory()->create([
+        'image' => $this->secondImage,
     ]);
+
+    Storage::disk()
+        ->assertExists($this->secondTestModel->image);
+
+    Storage::disk()
+        ->assertExists($this->secondImage);
 });
 
 it('can save an image by passing the path', function () {
@@ -95,52 +67,23 @@ it('can save an image by passing the path', function () {
 
     WebpService::make($testImage->image)->save();
 
-    Storage::disk()
-        ->assertExists($this->webpImage);
+    Storage::disk()->assertExists($testImage->image);
 });
 
-it('can overwrite an image by passing the path', function () {
-    $testImage = TestModel::find(1);
-
-    $service = WebpService::make($testImage->image)->overwrite();
-
-    Storage::disk()
-        ->assertExists($this->webpImage);
-
-    Storage::disk()
-        ->assertMissing($this->image);
-});
-
-it('must modify image url in the database by passing the path', function () {
-    $testImage = TestModel::find(1);
-
-    $testImage->saveImageAsWebp($testImage->image);
-
-    assertDatabaseHas('test_images', [
-        'image' => $this->webpImage,
-    ]);
-});
 
 it('must resize as needed', function () {
-    $testImage = TestModel::find(1);
+    $image = Image::make(Storage::get($this->testModel->image));
 
-    $path = $testImage->resize('image', 400, 400);
-
-    Storage::disk()
-        ->assertExists($path);
-
-    Storage::disk()
-        ->assertExists($this->webpImage);
+    expect($image->width())->toBe(200)
+        ->and($image->height())->toBe(200);
 });
 
 it('must convert and overwrite all images in the directory ', function () {
     Artisan::call('public:to-webp --overwrite');
 
-    // ensure that other files with other extensions are not deleted!
     Storage::disk()
         ->assertExists($this->webpImage);
 
-    // ensure that old files are deleted!
     Storage::disk()
         ->assertMissing($this->image);
 });
@@ -217,7 +160,3 @@ it('should throw an exception if the path is for an not image was given', functi
     ]);
 });
 
-afterEach(function () {
-    Storage::disk()->delete($this->image);
-    Storage::disk()->delete($this->webpImage);
-});

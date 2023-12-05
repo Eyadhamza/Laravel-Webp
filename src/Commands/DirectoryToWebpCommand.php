@@ -33,7 +33,6 @@ class DirectoryToWebpCommand extends Command
 
                 $shouldOverwrite ? $service->overwrite() : $service->save();
 
-                $this->info($service->printInfo());
             } catch (Exception $e) {
                 $this->info($e->getMessage());
 

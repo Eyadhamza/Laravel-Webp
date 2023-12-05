@@ -2,10 +2,7 @@
 
 namespace EyadHamza\LaravelWebp\Services;
 
-use Exception;
 use EyadHamza\LaravelWebp\DTOs\ImageSettingsDto;
-use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
-use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 use EyadHamza\LaravelWebp\Traits\HandlePathConversion;
 use EyadHamza\LaravelWebp\Validators\ImageConversionValidator;
 use Illuminate\Support\Facades\Storage;
@@ -37,8 +34,6 @@ class WebpService
             config('webp.quality'),
         );
 
-        $this->calculateOriginalSize();
-
         $this->shouldResize = $this->imageSettingsDto->width && $this->imageSettingsDto->height;
 
         $this->webpRelativePath = $this->buildWebpRelativePath();
@@ -65,10 +60,6 @@ class WebpService
         }
 
         $image->save($webpPhysicalPath, $quality ?? $this->imageSettingsDto->quality, 'webp');
-
-        clearstatcache();
-
-        $this->calculateOptimizedSize();
 
         return $this->webpRelativePath;
     }
@@ -101,30 +92,8 @@ class WebpService
         return $this->webpFullPath;
     }
 
-    public function printInfo(): string
-    {
-        if (!isset($this->imageSettingsDto->optimizedSize)) {
-            return '';
-        }
-        return ' Image: ' .
-            $this->imageRelativePath . ' Before: ' .
-            number_format($this->imageSettingsDto->originalSize / 1048576, 4) . ' MB' . ' after: ' .
-            number_format($this->imageSettingsDto->optimizedSize / 1048576, 4) . ' MB';
-    }
-
-    private function calculateOriginalSize(): void
-    {
-        $this->imageSettingsDto->originalSize = Storage::size($this->imageRelativePath);
-    }
-
-    private function calculateOptimizedSize(): void
-    {
-        $this->imageSettingsDto->optimizedSize = Storage::size($this->webpRelativePath);
-    }
-
     private function isFullPath(string $imagePath = null): bool
     {
         return Str::startsWith($imagePath, 'http');
     }
-
 }
