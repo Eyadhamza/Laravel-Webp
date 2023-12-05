@@ -4,5 +4,5 @@ return [
     'quality' => 70,
     'height' => null,
     'width' => null,
-    'overwrite' => true,
+    'overwrite' => true
 ];
