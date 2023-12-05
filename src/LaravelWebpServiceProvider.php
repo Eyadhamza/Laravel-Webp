@@ -6,7 +6,6 @@ use EyadHamza\LaravelWebp\Commands\AllModelsToWebpCommand;
 use EyadHamza\LaravelWebp\Commands\DirectoryToWebpCommand;
 use EyadHamza\LaravelWebp\Commands\ToWebpImageFieldCommand;
 use EyadHamza\LaravelWebp\Commands\ToWepExtensionFieldCommand;
-use EyadHamza\LaravelWebp\Services\WebpService;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

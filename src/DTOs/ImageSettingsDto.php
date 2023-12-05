@@ -4,7 +4,6 @@ namespace EyadHamza\LaravelWebp\DTOs;
 
 class ImageSettingsDto
 {
-
     public int $originalSize;
     public int $optimizedSize;
 
@@ -12,7 +11,6 @@ class ImageSettingsDto
         public readonly ?int $width,
         public readonly ?int $height,
         public readonly ?int $quality,
-    )
-    {
+    ) {
     }
 }

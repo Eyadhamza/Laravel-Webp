@@ -9,11 +9,9 @@ class ImageConversionValidator
 {
     public const IMAGE_EXTENSIONS = ['PNG', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'svg', 'svgz', 'cgm', 'djv', 'djvu', 'ico', 'ief', 'jpe', 'pbm', 'pgm', 'pnm', 'ppm', 'ras', 'rgb', 'tif', 'tiff', 'wbmp', 'xbm', 'xpm', 'xwd', 'webp'];
 
-
     public function __construct(
         private readonly ?string $imagePath,
-    )
-    {
+    ) {
     }
 
     public static function make(string $imagePath = null): static
@@ -37,7 +35,7 @@ class ImageConversionValidator
      */
     private function validateNotNull(): self
     {
-        if (!$this->imagePath) {
+        if (! $this->imagePath) {
             throw new NoImageGivenException('No Image was given!');
         }
 
@@ -46,13 +44,12 @@ class ImageConversionValidator
 
     private function validateIsImage(): self
     {
-        if (!$this->isImage($this->imagePath)) {
+        if (! $this->isImage($this->imagePath)) {
             throw new NotImageException('This is not an image!');
         }
 
         return $this;
     }
-
 
     private function isImage($file): bool
     {
@@ -63,5 +60,4 @@ class ImageConversionValidator
             self::IMAGE_EXTENSIONS
         );
     }
-
 }
