@@ -3,7 +3,7 @@
 namespace EyadHamza\LaravelWebp\Commands;
 
 use Exception;
-use EyadHamza\LaravelWebp\Services\ImageToWebpService;
+use EyadHamza\LaravelWebp\Services\WebpService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -17,14 +17,6 @@ class DirectoryToWebpCommand extends Command
 
     protected $description = 'Optimize images in public directory';
 
-    private $imageService;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->imageService = new ImageToWebpService();
-    }
-
     public function handle()
     {
         $directory = $this->argument('directory');
@@ -37,13 +29,11 @@ class DirectoryToWebpCommand extends Command
 
         foreach ($directoryFiles as $file) {
             try {
-                $this->imageService->make($file);
+                $service = WebpService::make($file);
 
-                $shouldOverwrite ?
-                    $this->imageService->overwrite() :
-                    $this->imageService->save();
+                $shouldOverwrite ? $service->overwrite() : $service->save();
 
-                $this->info($this->imageService->printInfo());
+                $this->info($service->printInfo());
             } catch (Exception $e) {
                 $this->info($e->getMessage());
 

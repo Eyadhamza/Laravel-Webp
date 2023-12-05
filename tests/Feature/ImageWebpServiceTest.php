@@ -2,8 +2,8 @@
 
 use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
 use EyadHamza\LaravelWebp\Exceptions\NotImageException;
-use EyadHamza\LaravelWebp\ImageToWebp;
 
+use EyadHamza\LaravelWebp\Services\WebpService;
 use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
@@ -17,7 +17,7 @@ beforeEach(function () {
     Storage::persistentFake();
 
     $this->image = UploadedFile::fake()
-        ->image('image_one.jpg')
+        ->image('image.jpg')
         ->store('public');
 
     $this->webpImage = Str::replace('.jpg', '.webp', $this->image);
@@ -26,6 +26,8 @@ beforeEach(function () {
         'image' => $this->image,
         'avatar' => $this->image,
     ]);
+
+    $this->imageService = WebpService::make($this->image);
 });
 
 it('can save an image', function () {
@@ -37,7 +39,7 @@ it('can save an image', function () {
         ->assertExists($this->webpImage);
 
     Storage::disk()
-        ->assertExists(ImageToWebp::getOldImageRelativePath());
+        ->assertExists($this->image);
 });
 it('can save an image with a very small size', function () {
     $testImage = TestModel::find(1);
@@ -48,7 +50,7 @@ it('can save an image with a very small size', function () {
         ->assertExists($this->webpImage);
 
     Storage::disk()
-        ->assertExists(ImageToWebp::getOldImageRelativePath());
+        ->assertExists($this->image);
 });
 
 it('can save an image with the right name', function () {
@@ -69,15 +71,13 @@ it('can save an image with the right name', function () {
 
 it('can overwrite an image', function () {
     withoutExceptionHandling();
-    $testImage = TestModel::find(1);
-
-    $testImage->overwriteImageAsWebp();
+    TestModel::find(1);
 
     Storage::disk()
-        ->assertExists($this->webpImage);
+        ->assertExists($this->imageService->getWebpRelativePath());
 
     Storage::disk()
-        ->assertMissing(ImageToWebp::getOldImageRelativePath());
+        ->assertMissing($this->image);
 });
 
 it('must modify image url in the database', function () {
@@ -90,25 +90,25 @@ it('must modify image url in the database', function () {
     ]);
 });
 
-it('can  save an image by passing the path', function () {
+it('can save an image by passing the path', function () {
     $testImage = TestModel::find(1);
 
-    ImageToWebp::make($testImage->image)->save();
+    WebpService::make($testImage->image)->save();
 
     Storage::disk()
-        ->assertExists(ImageToWebp::getOldImageRelativePath());
+        ->assertExists($this->webpImage);
 });
 
 it('can overwrite an image by passing the path', function () {
     $testImage = TestModel::find(1);
 
-    ImageToWebp::make($testImage->image)->overwrite();
+    $service = WebpService::make($testImage->image)->overwrite();
 
     Storage::disk()
-        ->assertExists(ImageToWebp::getWebpRelativePath(ImageToWebp::toRelativePath($testImage->image)));
+        ->assertExists($this->webpImage);
 
     Storage::disk()
-        ->assertMissing(ImageToWebp::getOldImageRelativePath());
+        ->assertMissing($this->image);
 });
 
 it('must modify image url in the database by passing the path', function () {
@@ -127,10 +127,10 @@ it('must resize as needed', function () {
     $path = $testImage->resize('image', 400, 400);
 
     Storage::disk()
-        ->assertExists(ImageToWebp::toRelativePath($path));
+        ->assertExists($path);
 
     Storage::disk()
-        ->assertExists(ImageToWebp::getOldImageRelativePath());
+        ->assertExists($this->webpImage);
 });
 
 it('must convert and overwrite all images in the directory ', function () {
@@ -198,7 +198,7 @@ it('should throw an exception if no image was given', function () {
     ]);
     $this->expectException(NoImageGivenException::class);
 
-    ImageToWebp::make($testImage->image);
+    WebpService::make($testImage->image);
 
     assertDatabaseHas('test_images', [
         'image' => null,
@@ -210,9 +210,14 @@ it('should throw an exception if the path is for an not image was given', functi
     ]);
     $this->expectException(NotImageException::class);
 
-    ImageToWebp::make($testImage->image);
+    WebpService::make($testImage->image);
 
     assertDatabaseHas('test_images', [
         'image' => null,
     ]);
+});
+
+afterEach(function () {
+    Storage::disk()->delete($this->image);
+    Storage::disk()->delete($this->webpImage);
 });

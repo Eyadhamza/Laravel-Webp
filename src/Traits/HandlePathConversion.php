@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Storage;
 
 trait HandlePathConversion
 {
-    protected function buildNewRelativePath($relativePath, $width = null, $height = null): string
+    protected function buildWebpRelativePath(): string
     {
-        return $this->getSlicedPathAtExtension($relativePath, $width, $height) . '.webp';
+        return $this->getSlicedPathAtExtension() . '.webp';
     }
 
-    protected function getSlicedPathAtExtension($path, $width, $height): string
+    protected function getSlicedPathAtExtension(): string
     {
-        $imageParts = explode('.', $path);
+        $imageParts = explode('.', $this->imageRelativePath);
         $sliced = array_slice($imageParts, 0, -1);
-        if ($height && $width) {
-            return implode('.', $sliced) . "_{$width}x{$height}";
+        if ($this->imageSettingsDto->height && $this->imageSettingsDto->width) {
+            return implode('.', $sliced) . "_{$this->imageSettingsDto->width}x{$this->imageSettingsDto->height}";
         }
 
         return implode('.', $sliced);

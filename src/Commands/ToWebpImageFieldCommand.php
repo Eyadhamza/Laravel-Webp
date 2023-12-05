@@ -2,7 +2,7 @@
 
 namespace EyadHamza\LaravelWebp\Commands;
 
-use EyadHamza\LaravelWebp\ImageToWebp;
+use EyadHamza\LaravelWebp\Services\WebpService;
 use Illuminate\Console\Command;
 
 class ToWebpImageFieldCommand extends Command
@@ -18,11 +18,11 @@ class ToWebpImageFieldCommand extends Command
         $attribute = $this->argument('attribute');
         $model->all()->each(function ($object) use ($attribute) {
             if ($attribute) {
-                $object->fill([$attribute => ImageToWebp::make($object->$attribute)->getWebpRelativePath()]);
+                $object->fill([$attribute => WebpService::make($object->$attribute)->getWebpRelativePath()]);
                 $object->save();
             } else {
                 foreach (collect($object->getImagesField()) as $key => $fieldValue) {
-                    $object->convertImageInDatabase($key, ImageToWebp::make($fieldValue)->getWebpRelativePath());
+                    $object->convertImageInDatabase($key, WebpService::make($fieldValue)->getWebpRelativePath());
                 }
             }
         });
