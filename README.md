@@ -1,4 +1,4 @@
-# Laravel webp
+# Laravel WebP
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/eyadhamza/laravel-webp.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/laravel-webp)
 
@@ -6,9 +6,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/eyadhamza/laravel-webp.svg?style=flat-square)](https://packagist.org/packages/eyadhamza/laravel-webp)
 
 ---
-This package is a simple wrapper for [PHP Intervention Library]() to provide a more 
-simple interface and convenient way to convert images to webp - next generation format - extension, and resize them to render only needed sizes.
 
+This Laravel package is a simple wrapper for the [PHP Intervention Library](http://image.intervention.io/) to provide a more straightforward interface and convenient way to convert images to the WebP format - a next-generation image format - and resize them to render only the needed sizes.
 
 ## Installation
 
@@ -18,153 +17,82 @@ You can install the package via composer:
 composer require eyadhamza/laravel-webp
 ```
 
-You can publish the config file with:
+Publish the config file with:
+
 ```bash
 php artisan vendor:publish --provider="EyadHamza\LaravelWebp\LaravelWebpServiceProvider" --tag="webp-config"
 ```
 
-This is the contents of the published config file:
-
-the values represent the default values that will be used to convert the image, 
-you can set the values of height and width to the values you would like to have in the converted image.
+The contents of the published config file:
 
 ```php
 return [
     'quality' => 70,
     'height' => null,
-    'width' => null
+    'width' => null,
+    'overwrite' => true
 ];
 ```
 
 ## Usage
 
-### Converting Images:
-To use the package on a given Eloquent Model you should use HandleWebpConversion Trait
-```php
-class TestModel extends Model
-{
-    use HandleWebpConversion;
-}
-```
-The Package will look for a protected property named $imageFields that 
-will be used by default to change the attributes value in the database when saving the model.
-```php
-class TestModel extends Model
-{
-    use HandleWebpConversion;
-    protected $fillable = [
-        'image',
-        'avatar'
-    ];
+### Converting / Resizing Images in Eloquent Models:
 
-    protected array $imageFields = [
-        'image',
-        'avatar'
+To convert images in Eloquent Models, all you need to do is to add a cast to the image columns in your model:
+
+```php
+class TestModel extends Model
+{
+    protected $casts = [
+        'image' => ToWebpCast::class . ':200,200,100',
+        'avatar' => ToWebpCast::class,
     ];
 }
 ```
 
-Now after you prepared your model, you can call the saveImageAsWebp() method on any model object that has the url of the image.
-```php
-$testModel->saveImageAsWebp();
-```
-The saveImageAsWebp() method will do the following:
+The `ToWebpCast` class takes three optional parameters: width, height, and quality.
+You can also pass the values in the config file as default values.
+In the config file, set the `overwrite` value to `true` or `false`; if set to `true`, the old image will be deleted.
 
-1- Convert The image on disk to webp
-
-2- keep the old image
-
-3- change the attributes defined in $imageFields in the database to point to the new image path with the new extension
-
-4- Create a log entry in the laravel.log file with the details of the operation
-and the before and after size e.g:
-```php
-Image: public/test.jpg Before: 0.3126 after: 0.0460 Percentage: 85.27
-```
-
----
-What if you want to delete the old image?
-
-```php
-$testModel->overwriteImageAsWebp();
-```
-The overwriteImageAsWebp() method will do just like the previous, but it will delete the old image from disk
-
---- 
-### Resizing Images
-If you tried Lighthouse to test your application, you may have got a suggestion that the rendered image is actually smaller than 
-the image sent by the server.
-
-A solution to that will be using a controller that changes the size on demand.
-
-But that solution is not the best solution as image processing is an intensive operation for the CPU resources, you don't
-want to have your page resize everytime your page reloads.
-
-So, a better approach is to do that task one time and save another resized image on disk.
-
-And It's Simple Enough!
-
-Let's say that you want to resize the image to 400x400,
-the image here is stored in a column named "image" in the database,
-you can pass any column that contains a valid absolute url of an image. 
-
-```php
-$testModel->resize('image', 400, 400);
-```
-
-The resize('image', $width, $height) method will do the following:
-
-1- will look for the value at "image" with the given model object
-
-2- Save a version of the image on disk to webp with the new dimension with a new name that ends with _400x400.webp
-
-2- Return the Full Path of the image, so you can use it somewhere in your views.
+Now, whenever you set the image attribute,
+it will be converted to WebP and resized to the specified dimensions—if given.
 
 ### Optimize Existing Images:
-What if you already have images on your local storage that are not optimized, 
-and surely those images' path are also stored in the database.
 
-It will be kinda hard to do that manually and convert each one by hand!
+If you already have images on your local storage that are not optimized, and their paths are stored in the database, you can use the following Artisan command:
 
-The Solution is Here as an Artisan Command:
-
-First we will modify files on disk then we will run another command to modify the database attributes - defined in $imageFields - 
-to point to the new location.
 ```bash
 php artisan public:to-webp
 ```
-This will convert images in the public directory, you can specify a file using the directory option 
+
+To convert images in a specific directory:
+
 ```bash
-php artisan public:to-webp directory = 'public/images'
+php artisan public:to-webp --directory='public/images'
 ```
-Note that the command will keep the old images, if you want to delete the old images you can pass --overwrite to the command
+
+To delete old images, use the `--overwrite` option:
+
 ```bash
 php artisan public:to-webp --overwrite
 ```
-If you would like to optimize the files in your static assets you can pass --assets
+
+For optimizing files in static assets, use:
 
 ```bash
 php artisan public:to-webp --assets
 ```
 
-Now to modify the database attribute value to point to the new webp image we run 
-the command, and we pass the name of the Eloquent model like this - this assumes that you have your models under App\Models - 
-alternatively you may pass the full class name.
+To modify the database attribute values to point to the new webp image, run:
+
 ```bash
 php artisan images:to-webp Post
 ```
-The previous command will look for the protected property $imageField in your model.
 
-Alternatively, you can pass the name of the attribute as will.
-```bash
-php artisan images:to-webp User avatar
-```
+If you want more methods to conveniently change your image path, refer to the `ImageToWebpService` class.
 
-If you want to use more methods that conveniently change your image path you may refer to the ImageToWebpService class
-
-You can also call the methods directly using the Facade ImageToWebp
 ## Testing
-``` Warning: Tests Are Potentially Destructive```
+
 ```bash
 composer test
 ```
