@@ -35,7 +35,7 @@ class PathConversionSupport
 
     public static function appendWidthAndHeightToImageName(string $webpRelativePath, float $width = null, float $height = null): string
     {
-        if (!$width && !$height) {
+        if (! $width && ! $height) {
             return $webpRelativePath;
         }
 
