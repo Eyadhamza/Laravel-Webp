@@ -4,9 +4,11 @@ use EyadHamza\LaravelWebp\Exceptions\NoImageGivenException;
 use EyadHamza\LaravelWebp\Exceptions\NotImageException;
 
 use EyadHamza\LaravelWebp\Services\WebpService;
+use EyadHamza\LaravelWebp\Support\PathConversionSupport;
 use EyadHamza\LaravelWebp\Tests\TestSupport\Models\TestModel;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -79,84 +81,83 @@ it('must resize as needed', function () {
 });
 
 it('must convert and overwrite all images in the directory ', function () {
+    $image = UploadedFile::fake()
+        ->image('image.jpg')
+        ->store('public');
+
+    $webpImage = Str::replace('.jpg', '.webp', $image);
+
     Artisan::call('public:to-webp --overwrite');
 
     Storage::disk()
-        ->assertExists($this->webpImage);
-
-    Storage::disk()
-        ->assertMissing($this->image);
-});
-it('must convert and keep all images in the directory ', function () {
-    Artisan::call('public:to-webp');
-
-    Storage::disk()
-        ->assertExists($this->webpImage);
+        ->assertExists($webpImage);
 
     // ensure that old files are there!
     Storage::disk()
-        ->assertExists($this->webpImage);
+        ->assertMissing($image);
+});
+it('must convert and keep all images in the directory ', function () {
+    $image = UploadedFile::fake()
+        ->image('image.jpg')
+        ->store('public');
+
+    $webpImage = Str::replace('.jpg', '.webp', $image);
+
+    Artisan::call('public:to-webp');
+
+    Storage::disk()->assertExists($webpImage);
+
+    // ensure that old files are there!
+    Storage::disk()
+        ->assertExists($image);
 });
 
 it('command must convert image field in the database ', function () {
+    $image = UploadedFile::fake()
+        ->image('image.jpg')
+        ->store('public');
+
+    $webpImage = Str::replace('.jpg', '.webp', $image);
+
+    DB::table('test_images')->insert([
+        'image' => $image,
+    ]);
+
     Artisan::call('images:to-webp', [
         'model' => TestModel::class,
-        'attribute' => 'image',
     ]);
-
 
     assertDatabaseHas('test_images', [
-        'image' => $this->webpImage,
-    ]);
-
-    assertDatabaseMissing('test_images', [
-        'image' => $this->image,
+        'image' => PathConversionSupport::appendWidthAndHeightToImageName($webpImage, 200, 200),
     ]);
 });
-test('command must convert all the image fields in the database ', function () {
-    Artisan::call('images:to-webp
-    EyadHamza\\\LaravelWebp\\\Tests\\\TestSupport\\\Models\\\TestModel');
 
-    assertDatabaseHas('test_images', [
-        'image' => $this->webpImage,
-    ]);
-
-    assertDatabaseMissing('test_images', [
-        'image' => $this->image,
-    ]);
-});
-it('can support multiple image fields url in the database', function () {
-    $testImage = TestModel::find(1);
-
-    $testImage->saveImageAsWebp();
-
-    assertDatabaseHas('test_images', [
-        'image' => $this->webpImage,
-    ]);
-});
 
 it('should throw an exception if no image was given', function () {
-    $testImage = TestModel::create([
-        'image' => null,
-    ]);
     $this->expectException(NoImageGivenException::class);
 
-    WebpService::make($testImage->image);
-
-    assertDatabaseHas('test_images', [
+    TestModel::create([
         'image' => null,
     ]);
+
 });
 it('should throw an exception if the path is for an not image was given', function () {
+    $this->expectException(NotImageException::class);
+
     $testImage = TestModel::create([
         'image' => 'hellothere',
     ]);
-    $this->expectException(NotImageException::class);
 
-    WebpService::make($testImage->image);
-
-    assertDatabaseHas('test_images', [
-        'image' => null,
-    ]);
 });
 
+it('should not make the changes twice', function () {
+    $testImage = TestModel::find(1);
+
+    $oldPath = $testImage->image;
+
+    $testImage->update([
+        'image' => $testImage->image,
+    ]);
+
+    Storage::disk()->assertExists($oldPath);
+});

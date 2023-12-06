@@ -3,7 +3,7 @@
 namespace EyadHamza\LaravelWebp\Services;
 
 use EyadHamza\LaravelWebp\DTOs\ImageSettingsDto;
-use EyadHamza\LaravelWebp\Traits\HandlePathConversion;
+use EyadHamza\LaravelWebp\Support\PathConversionSupport;
 use EyadHamza\LaravelWebp\Validators\ImageConversionValidator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -11,22 +11,16 @@ use Intervention\Image\ImageManagerStatic as Image;
 
 class WebpService
 {
-    use HandlePathConversion;
-
-
     private ImageSettingsDto $imageSettingsDto;
-    private ImageConversionValidator $validator;
     private ?string $imageRelativePath;
     private string $webpRelativePath;
-    private string $imageFullPath;
-    private string $webpFullPath;
     private bool $shouldResize;
 
     public function __construct(string $imageRelativePath = null, ImageSettingsDto $imageSettingsDto = null)
     {
-        $this->imageRelativePath = $this->isFullPath($imageRelativePath) ? $this->toRelativePath($imageRelativePath) : $imageRelativePath;
+        $this->imageRelativePath = PathConversionSupport::isFullPath($imageRelativePath) ? PathConversionSupport::toRelativePath($imageRelativePath) : $imageRelativePath;
 
-        $this->validator = ImageConversionValidator::make($this->imageRelativePath)->validate();
+        ImageConversionValidator::make($this->imageRelativePath)->validate();
 
         $this->imageSettingsDto = $imageSettingsDto ?? new ImageSettingsDto(
             config('webp.width'),
@@ -36,7 +30,7 @@ class WebpService
 
         $this->shouldResize = $this->imageSettingsDto->width && $this->imageSettingsDto->height;
 
-        $this->webpRelativePath = $this->buildWebpRelativePath();
+        $this->webpRelativePath = PathConversionSupport::buildWebpRelativePath($this->imageRelativePath);
     }
 
     public static function make(string $imagePath = null, ImageSettingsDto $imageSettingsDto = null): self
@@ -46,12 +40,14 @@ class WebpService
 
     public function save($quality = null): string
     {
-        if (Storage::exists($this->webpRelativePath)) {
+        if ($this->exists()) {
             return $this->webpRelativePath;
         }
 
-        $webpPhysicalPath = $this->toPhysicalPath($this->webpRelativePath);
-        $imagePhysicalPath = $this->toPhysicalPath($this->imageRelativePath);
+        $this->webpRelativePath = PathConversionSupport::appendWidthAndHeightToImageName($this->webpRelativePath, $this->imageSettingsDto->width, $this->imageSettingsDto->height);
+
+        $webpPhysicalPath = PathConversionSupport::toPhysicalPath($this->webpRelativePath);
+        $imagePhysicalPath = PathConversionSupport::toPhysicalPath($this->imageRelativePath);
 
         $image = Image::make($imagePhysicalPath);
 
@@ -85,15 +81,5 @@ class WebpService
     public function getWebpRelativePath(): string
     {
         return $this->webpRelativePath;
-    }
-
-    public function getWebpFullPath(): ?string
-    {
-        return $this->webpFullPath;
-    }
-
-    private function isFullPath(string $imagePath = null): bool
-    {
-        return Str::startsWith($imagePath, 'http');
     }
 }

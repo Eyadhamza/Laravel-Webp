@@ -23,9 +23,7 @@ class DirectoryToWebpCommand extends Command
         $shouldOverwrite = $this->option('overwrite');
         $isAssetDirectory = $this->option('assets');
 
-        $directoryFiles = $isAssetDirectory ?
-            File::allFiles($directory) :
-            Storage::allFiles($directory);
+        $directoryFiles = $isAssetDirectory ? File::allFiles($directory) : Storage::allFiles($directory);
 
         foreach ($directoryFiles as $file) {
             try {
