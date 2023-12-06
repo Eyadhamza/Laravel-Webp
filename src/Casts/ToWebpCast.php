@@ -16,8 +16,7 @@ class ToWebpCast implements CastsInboundAttributes
         public readonly ?int $height = null,
         public readonly ?int $quality = null,
         public ?bool         $overwrite = null,
-    )
-    {
+    ) {
         $this->overwrite = $overwrite ?? config('webp.overwrite');
         $this->imageSettingsDto = new ImageSettingsDto(
             config('webp.width') ?? $width,
@@ -25,7 +24,6 @@ class ToWebpCast implements CastsInboundAttributes
             config('webp.quality') ?? $quality,
         );
     }
-
 
     public function set($model, string $key, mixed $value, array $attributes): string
     {

@@ -6,7 +6,6 @@ use EyadHamza\LaravelWebp\DTOs\ImageSettingsDto;
 use EyadHamza\LaravelWebp\Support\PathConversionSupport;
 use EyadHamza\LaravelWebp\Validators\ImageConversionValidator;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class WebpService
