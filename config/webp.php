@@ -3,5 +3,6 @@
 return [
     'quality' => 70,
     'height' => null,
-    'width' => null
+    'width' => null,
+    'overwrite' => true
 ];
